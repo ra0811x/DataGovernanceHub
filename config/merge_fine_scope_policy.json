@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "max_target_rows": 912301,
+  "tolerance_rows": 5000,
+  "manual_ratio_enabled": false,
+  "manual_ratio": 0.72,
+  "target_mode": "absolute",
+  "target_min": 900000,
+  "target_max": 950000,
+  "preferred_target": 950000,
+  "target_min_percent": 90.0,
+  "target_max_percent": 95.0,
+  "preferred_target_percent": 95.0,
+  "small_source_threshold": 10000,
+  "rounding": "largest_remainder",
+  "keep_at_least_one_when_nonzero": false,
+  "fallback_when_small_exceeds_max": "warn_only"
+}

@@ -1,0 +1,305 @@
+/* ==================== 模态框样式 ==================== */
+
+/* 模态框遮罩 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-overlay.show { display: flex; }
+
+/* 模态框 */
+.modal {
+    background: white;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h2 { font-size: 16px; }
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+}
+.modal-close:hover { color: #333; }
+.modal-body {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+.modal-footer {
+    padding: 12px 15px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+}
+.modal-footer-right { display: flex; gap: 8px; }
+
+/* 模态框内容样式 */
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+.modal-close:hover {
+    background: #f1f3f5;
+    color: #333;
+}
+.modal-body {
+    padding: 20px 25px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* 数据历史列表 */
+.data-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.data-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.data-history-item:hover { background: #e9ecef; }
+.data-history-item.current {
+    border-color: #667eea;
+    background: #e7eaff;
+}
+.data-history-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.data-history-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+.data-history-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+    color: #666;
+}
+.data-history-current-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #667eea;
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    align-self: flex-start;
+}
+.data-history-actions { display: flex; gap: 8px; }
+
+/* 历史章节 */
+.history-section { margin-bottom: 40px; }
+.history-section:last-child { margin-bottom: 0; }
+.history-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+.history-empty {
+    padding: 40px;
+    text-align: center;
+    color: #999;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* 数据历史卡片 */
+.data-history-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+}
+.data-history-card:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+.data-history-card.current {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #e7eaff 0%, #f0f3ff 100%);
+}
+.data-history-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.data-history-card-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+.data-history-card-meta {
+    display: flex;
+    gap: 18px;
+    font-size: 13px;
+    color: #666;
+    flex-wrap: wrap;
+}
+.data-history-card-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.current-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: #005fe0;
+    color: white;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* 删除确认对话框 */
+.delete-confirm-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+}
+.delete-confirm-modal.show { display: flex; }
+.delete-confirm-content {
+    background: white;
+    border-radius: 6px;
+    padding: 25px;
+    min-width: 400px;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.delete-confirm-header { margin-bottom: 15px; }
+.delete-confirm-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #dc3545;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.delete-confirm-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+.delete-confirm-warning h4 {
+    color: #856404;
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.delete-confirm-warning p {
+    color: #856404;
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.6;
+}
+.delete-confirm-items {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.delete-confirm-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 13px;
+    color: #495057;
+}
+.delete-confirm-item::before {
+    content: '\2022';
+    color: #dc3545;
+    font-size: 20px;
+    font-weight: bold;
+}
+.delete-confirm-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}

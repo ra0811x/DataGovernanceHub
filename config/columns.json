@@ -1,0 +1,301 @@
+{
+  "全部": {
+    "columns": [
+      {
+        "name": "序号",
+        "visible": true,
+        "width": 120,
+        "color": "#495057"
+      },
+      {
+        "name": "公司",
+        "visible": true,
+        "width": 120,
+        "color": "#495057"
+      },
+      {
+        "name": "业务部门",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "业务系统",
+        "visible": true,
+        "width": 120,
+        "color": "#495057"
+      },
+      {
+        "name": "数据资产名称",
+        "visible": true,
+        "width": 120,
+        "color": "#495057"
+      },
+      {
+        "name": "网络",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "IP地址",
+        "visible": true,
+        "width": 120,
+        "color": "#495057"
+      },
+      {
+        "name": "端口号",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "集群IP:端口",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "数据存储方式",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "版本号",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "数据库实例名称/文件路径",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "字符集",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "归属4A",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "负责人",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "联系方式",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "存储数据量",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "资产归属",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "备注",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "资源类型",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "所属系统类型（代码）",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "所属系统类型（文字）",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "归属域",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "系统资源ID",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "业务系统定级备案名称（选填）",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "是否重要系统",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "系统资源类型",
+        "visible": true,
+        "width": 120
+      },
+      {
+        "name": "系统资源类型（数据库或主机）信安专用",
+        "visible": true,
+        "width": 120
+      }
+    ],
+    "pageSize": 500,
+    "sourceFile": "湖北移动-数据库概览信息表0320-new.xlsx",
+    "headerHeight": 40,
+    "actionColumn": {
+      "width": 120,
+      "color": "#495057"
+    }
+  },
+  "columns": [
+    {
+      "name": "序号",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "公司",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务部门",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务系统",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据资产名称",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "网络",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "IP地址",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "端口号",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "集群IP:端口",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据存储方式",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "版本号",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据库实例名称/文件路径",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "字符集",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "归属4A",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "负责人",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "联系方式",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "存储数据量",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "资产归属",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "备注",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "资源类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "所属系统类型（代码）",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "所属系统类型（文字）",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "归属域",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "系统资源ID",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务系统定级备案名称（选填）",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "是否重要系统",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "系统资源类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "系统资源类型（数据库或主机）信安专用",
+      "visible": true,
+      "width": 120
+    }
+  ],
+  "sourceFile": "湖北移动-数据库概览信息表0421-new.xlsx"
+}

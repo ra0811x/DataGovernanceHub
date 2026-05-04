@@ -1,0 +1,12 @@
+{
+  "assets": {
+    "enabled": false,
+    "mode": "top_n",
+    "value": 0
+  },
+  "merge_results": {
+    "enabled": false,
+    "mode": "top_n",
+    "value": 0
+  }
+}

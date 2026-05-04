@@ -1,0 +1,422 @@
+{
+  "name": "资产名称映射",
+  "key": "asset_name_mapping",
+  "title": "资产名称映射",
+  "description": "用于将源数据中的资产名称转换为统一口径的标准资产名称。",
+  "version": "1.0",
+  "last_updated": "2026-04-24",
+  "total_count": 65,
+  "mappings": [
+    {
+      "id": 1,
+      "source": "4A审计库节点1[10.25.179.28]",
+      "target": "4A审计库节点1[10.25.179.28]",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "source": "4A审计库节点2[10.30.70.33]",
+      "target": "4A审计库一体机节点4",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "source": "BOMC告警库dbbomcgj[10.30.63.82]",
+      "target": "BOMC告警库dbbomcgj[10.30.63.82]",
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "source": "BOMC告警库dbbomcgj[10.30.63.84]",
+      "target": "BOMC流程库dbbomclc租户[10.30.63.83]",
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "source": "gdb84-apay-10.30.70.84",
+      "target": "Golden-支付中心APAY租户[10.25.105.76]",
+      "enabled": true
+    },
+    {
+      "id": 6,
+      "source": "gdb84-ncsx-10.30.70.84",
+      "target": "Golden-号卡集中化APAY租户[10.25.105.77]",
+      "enabled": true
+    },
+    {
+      "id": 7,
+      "source": "HBIBOSS_adg2[10.25.105.25]",
+      "target": "HBIBOSS_adg2[10.25.105.25]",
+      "enabled": true
+    },
+    {
+      "id": 8,
+      "source": "IFRS15数据库[10.31.97.197]",
+      "target": "IFRS15数据库[10.31.97.197]",
+      "enabled": true
+    },
+    {
+      "id": 9,
+      "source": "zhgc-oa-10.220.112.16",
+      "target": "智慧工程zhgc租户[10.25.142.5]",
+      "enabled": true
+    },
+    {
+      "id": 10,
+      "source": "zhpt-oa-10.220.112.16",
+      "target": "智慧后勤zhpt租户[10.25.142.5]",
+      "enabled": true
+    },
+    {
+      "id": 11,
+      "source": "云外设中心WMCScentral租户[10.30.63.91]",
+      "target": "云外设中心WMCScentral租户[10.30.63.91]",
+      "enabled": true
+    },
+    {
+      "id": 12,
+      "source": "公共参数库ggcsdb业务租户[10.30.70.114]",
+      "target": "公共参数库ggcsdb业务租户[10.30.63.73]",
+      "enabled": true
+    },
+    {
+      "id": 13,
+      "source": "能开变现数据库[10.25.178.8]",
+      "target": "能开变现数据库[10.25.178.8]",
+      "enabled": true
+    },
+    {
+      "id": 14,
+      "source": "卡券中心-COUPONDB[10.25.105.25]",
+      "target": "卡券中心-COUPONDB[10.30.70.17]",
+      "enabled": true
+    },
+    {
+      "id": 15,
+      "source": "新大数据库[10.25.125.117]",
+      "target": "新大数据库[10.25.125.117]",
+      "enabled": true
+    },
+    {
+      "id": 16,
+      "source": "大数据数据库[10.25.125.11]-DACPPDB",
+      "target": "DACPPDB[10.25.125.5]",
+      "enabled": true
+    },
+    {
+      "id": 17,
+      "source": "大数据数据库[10.25.125.11]-LSMSPDB",
+      "target": "LSMSPDB[10.25.125.5]",
+      "enabled": true
+    },
+    {
+      "id": 18,
+      "source": "应急开机库[10.25.105.71]",
+      "target": "应急开机库[10.30.63.39]",
+      "enabled": true
+    },
+    {
+      "id": 19,
+      "source": "掌微厅备集群weixindb_ob租户[10.241.233.17]",
+      "target": "掌微厅备集群weixindb_ob租户[10.241.233.17]",
+      "enabled": true
+    },
+    {
+      "id": 20,
+      "source": "新服务开通库ADG2（provision)[10.30.70.33]",
+      "target": "新服务开通库ADG2（provision)[10.30.70.33]",
+      "enabled": true
+    },
+    {
+      "id": 21,
+      "source": "新短厅库-SMSDB[10.25.105.25]",
+      "target": "新短厅库-SMSDB[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 22,
+      "source": "无纸化数据库[10.25.105.25]",
+      "target": "无纸化数据库[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 23,
+      "source": "智慧中台(任务协同)-UNCDB[10.30.63.51]",
+      "target": "智慧中台(任务协同)-UNCDB[10.30.63.51]",
+      "enabled": true
+    },
+    {
+      "id": 24,
+      "source": "智慧零售-SMARTMAL[10.25.105.25]",
+      "target": "智慧零售-SMARTMAL[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 25,
+      "source": "服开备库-aopen-10.30.70.109",
+      "target": "服务开通主集群aopen租户[10.30.63.64]",
+      "enabled": true
+    },
+    {
+      "id": 26,
+      "source": "服开备库-im-10.30.70.109",
+      "target": "服务开通主集群im租户[10.30.63.64]",
+      "enabled": true
+    },
+    {
+      "id": 27,
+      "source": "服开备库-provision-10.30.70.109",
+      "target": "新服务开通库备集群provision租户[10.30.70.103]",
+      "enabled": true
+    },
+    {
+      "id": 28,
+      "source": "服开备库-srp-10.30.70.109",
+      "target": "服务开通主集群srp租户[10.30.63.64]",
+      "enabled": true
+    },
+    {
+      "id": 29,
+      "source": "权益中心-BENEFITDB[10.25.105.25]",
+      "target": "权益中心-BENEFITDB[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 30,
+      "source": "测试营业B库[10.30.43.133]",
+      "target": "测试营业B库[10.30.43.133]",
+      "enabled": true
+    },
+    {
+      "id": 31,
+      "source": "消息中心数据库[10.25.105.25]",
+      "target": "消息中心数据库[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 32,
+      "source": "经分审计库[10.25.125.114]",
+      "target": "经分审计库[10.25.125.114]",
+      "enabled": true
+    },
+    {
+      "id": 33,
+      "source": "经分生产集群节点2[10.25.125.52]",
+      "target": "经分生产集群节点2[10.25.125.52]",
+      "enabled": true
+    },
+    {
+      "id": 34,
+      "source": "结算数据库一体机[10.30.151.14]",
+      "target": "结算数据库一体机[10.30.151.14]",
+      "enabled": true
+    },
+    {
+      "id": 35,
+      "source": "网厅备集群netdb租户[10.241.170.86]",
+      "target": "网厅备集群netdb租户[10.241.170.86]",
+      "enabled": true
+    },
+    {
+      "id": 36,
+      "source": "网厅备集群wangting租户[10.241.170.86]",
+      "target": "网厅备集群wangting租户[10.241.170.86]",
+      "enabled": true
+    },
+    {
+      "id": 37,
+      "source": "网格通备集群heyuehuidb租户[10.241.204.16]",
+      "target": "网格通备集群heyuehuidb租户[10.241.204.16]",
+      "enabled": true
+    },
+    {
+      "id": 38,
+      "source": "网格通备集群yxdb租户[10.241.204.16]",
+      "target": "网格通备集群yxdb租户[10.241.204.16]",
+      "enabled": true
+    },
+    {
+      "id": 39,
+      "source": "营业A2只读库[10.30.70.42]",
+      "target": "营业A2只读库[10.30.70.42]",
+      "enabled": true
+    },
+    {
+      "id": 40,
+      "source": "营业B备数据库[10.30.70.57]",
+      "target": "营业B库bcv[10.30.70.49]",
+      "enabled": true
+    },
+    {
+      "id": 41,
+      "source": "规则中心数据库[10.25.105.25]",
+      "target": "规则中心数据库[10.30.70.16]",
+      "enabled": true
+    },
+    {
+      "id": 42,
+      "source": "计费库rating租户[10.30.70.96]",
+      "target": "计费库rating租户[10.30.63.54]",
+      "enabled": true
+    },
+    {
+      "id": 43,
+      "source": "订单中心A备集群ordera租户[10.30.70.122]",
+      "target": "订单中心A备集群ordera租户[10.30.70.120]",
+      "enabled": true
+    },
+    {
+      "id": 44,
+      "source": "订单中心B备集群orderb租户[10.30.63.81]",
+      "target": "订单中心B备集群orderb租户[10.30.63.173]",
+      "enabled": true
+    },
+    {
+      "id": 45,
+      "source": "话单平衡性-HDPHX[10.30.63.51]",
+      "target": "话单平衡性-HDPHX[10.30.63.51]",
+      "enabled": true
+    },
+    {
+      "id": 46,
+      "source": "账务A2只读库[10.30.70.42]",
+      "target": "账务A2只读库[10.30.70.42]",
+      "enabled": true
+    },
+    {
+      "id": 47,
+      "source": "账务B2库ADG[10.30.63.25]",
+      "target": "账务B2库ADG[10.30.63.25]",
+      "enabled": true
+    },
+    {
+      "id": 48,
+      "source": "非核心应用小库集合-hbjhdb[10.30.63.51]",
+      "target": "业务稽核[10.30.63.49]",
+      "enabled": true
+    },
+    {
+      "id": 49,
+      "source": "srp-wlwsy-10.30.70.140",
+      "target": "磐维数据库[10.30.70.144]",
+      "enabled": true
+    },
+    {
+      "id": 50,
+      "source": "webcrawler数据库1",
+      "target": "webcrawler数据库1",
+      "enabled": true
+    },
+    {
+      "id": 51,
+      "source": "话单稽核1",
+      "target": "话单稽核1",
+      "enabled": true
+    },
+    {
+      "id": 52,
+      "source": "非核心应用小库集合-hdcs[10.30.63.51]",
+      "target": "非核心小库uncore集群5G灰度测试专题hdcs租户[10.5.80.225]",
+      "enabled": true
+    },
+    {
+      "id": 53,
+      "source": "客服备数据库-10.30.70.114",
+      "target": "客服主集群kfdb租户[10.30.63.73]",
+      "enabled": true
+    },
+    {
+      "id": 54,
+      "source": "查询库cxdb[10.30.70.125]",
+      "target": "查询库cxdb[10.30.70.123]",
+      "enabled": true
+    },
+    {
+      "id": 55,
+      "source": "经分数据库[10.25.125.114]",
+      "target": "经分数据库[10.25.125.114]",
+      "enabled": true
+    },
+    {
+      "id": 56,
+      "source": "经分服务集群节点1[10.25.125.55]",
+      "target": "经分服务集群节点1[10.25.125.55]",
+      "enabled": true
+    },
+    {
+      "id": 57,
+      "source": "A4MSDBPUB-4A-10.30.70.33",
+      "target": "4A审计库节点2[10.25.179.29",
+      "enabled": true
+    },
+    {
+      "id": 58,
+      "source": "4A审计库200",
+      "target": "4A审计库200",
+      "enabled": true
+    },
+    {
+      "id": 59,
+      "source": "GCM(10.30.63.37)",
+      "target": "GCM(10.25.105.6)",
+      "enabled": true
+    },
+    {
+      "id": 60,
+      "source": "大数据数据库[10.25.125.11]-IBASDB",
+      "target": "大数据数据库[10.25.125.11]",
+      "enabled": true
+    },
+    {
+      "id": 61,
+      "source": "hboa-oa-10.220.112.4",
+      "target": "OA主集群oa租户[10.25.142.3]",
+      "enabled": true
+    },
+    {
+      "id": 62,
+      "source": "zhda-oa-10.220.112.16",
+      "target": "综合档案zhda租户[10.25.142.5]",
+      "enabled": true
+    },
+    {
+      "id": 63,
+      "source": "hbjhdb-jh-10.241.232.34",
+      "target": "业务稽核集群hbjhdb租户[10.241.235.3]",
+      "enabled": true
+    },
+    {
+      "id": 64,
+      "source": "新历史库1-hisdb[10.30.70.27]",
+      "target": "历史库[10.30.70.25]",
+      "enabled": true
+    },
+    {
+      "id": 65,
+      "source": "结算数据库一体机[10.30.63.30]",
+      "target": "结算数据库一体机[10.30.151.14]",
+      "enabled": true
+    }
+  ],
+  "notes": "当前已完成配置层初始化，待后端接口与导出链路接通后正式生效。",
+  "usage": {
+    "scope": "用于报表映射规则中的名称标准化场景，可按列选择是否启用。",
+    "supported_actions": [
+      "直接输出转换后的标准名称",
+      "先做名称标准化，再继续执行联查或后续转换"
+    ],
+    "customization": {
+      "supports_enable_flag": true,
+      "supports_import_export": true,
+      "supports_frontend_edit": true,
+      "match_strategy_reserved": [
+        "exact"
+      ]
+    }
+  },
+  "field_meta": {
+    "source_label": "原资产名称",
+    "target_label": "标准资产名称",
+    "enabled_label": "是否启用"
+  }
+}

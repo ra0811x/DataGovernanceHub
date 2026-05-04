@@ -1,0 +1,1720 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-24",
+  "notes": "",
+  "definitions": {
+    "conditional_single": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "单字段条件判断",
+      "subtitle": "按一个字段的值顺序判断输出结果。",
+      "toneColor": "#0f4fa8",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "判断字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "先从当前主数据源选择一个字段，系统会用这个字段值去匹配条件数组。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "preset_template",
+          "name": "preset_template",
+          "type": "select",
+          "label": "条件模板",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "",
+              "label": "不使用模板"
+            },
+            {
+              "value": "data_storage_status",
+              "label": "数据存储状态判断"
+            },
+            {
+              "value": "data_purpose_ad_class",
+              "label": "处理目的判断(A-D类)"
+            },
+            {
+              "value": "data_path_ad_class",
+              "label": "流转路径判断(A-D类)"
+            },
+            {
+              "value": "data_scenario_ad_class",
+              "label": "应用场景判断(A-D类)"
+            },
+            {
+              "value": "data_measure_ad_class",
+              "label": "安全措施判断(A-D类)"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "模板只会覆盖 conditions 和默认值，便于快速起步，后续仍可继续手改 JSON。",
+          "optionValueKey": "index",
+          "transient": true,
+          "action": "apply_single_conditional_template",
+          "runtimeValueResolver": "detect_single_conditional_template",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "条件未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "所有条件都没有命中时，当前列输出这里填写的值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "补充当前规则的说明",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议写清楚判断口径，便于后期维护和 JSON 导入导出时理解。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段5",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "条件数组",
+          "text": "具体 conditions 数组仍可在 JSON 编辑区直接维护。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "对字段 {{source_value}} 进行单字段条件判断，共 {{condition_count}} 条条件，未命中时返回 {{default}}",
+      "jsonKeys": [
+        "source_value",
+        "conditions",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "conditions": [],
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于一个字段决定当前列输出的场景。条件数组仍在 JSON 区维护，模块区主要负责常用字段和模板辅助。",
+      "effectText": "保存后会直接影响当前列按哪个字段做单字段判断，以及所有命中和兜底结果。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 字段和当前规则中的 conditions 条件数组",
+      "workflowSteps": [
+        {
+          "label": "读取字段",
+          "text": "从 {{rule_source_name}} 读取 {{source_value}} 作为判断源值"
+        },
+        {
+          "label": "顺序匹配",
+          "text": "按 conditions 数组从上到下依次判断，当前共 {{condition_count}} 条条件"
+        },
+        {
+          "label": "返回结果",
+          "text": "命中后返回对应 result，全部未命中时返回 {{default}}"
+        }
+      ]
+    },
+    "conditional_multi": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "多字段条件判断",
+      "subtitle": "支持“简单联合判断”和“条件组判断”两种模式。",
+      "toneColor": "#2563eb",
+      "fields": [
+        {
+          "key": "mode",
+          "name": "mode",
+          "type": "select",
+          "label": "判断模式",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "simple",
+              "label": "简单模式"
+            },
+            {
+              "value": "groups",
+              "label": "条件组模式"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "简单模式适合一组 conditions 联合判断；条件组模式适合多组规则汇总。",
+          "optionValueKey": "index",
+          "transient": true,
+          "action": "apply_multi_conditional_mode",
+          "runtimeValueResolver": "detect_multi_conditional_mode",
+          "visibleWhen": null
+        },
+        {
+          "key": "logic",
+          "name": "logic",
+          "type": "select",
+          "label": "条件逻辑",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "AND",
+              "label": "AND"
+            },
+            {
+              "value": "OR",
+              "label": "OR"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "简单模式下，conditions 列表会按这里设置的 AND 或 OR 逻辑联合判断。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": {
+            "field": "mode",
+            "equals": "simple"
+          }
+        },
+        {
+          "key": "result",
+          "name": "result",
+          "type": "text",
+          "label": "命中结果",
+          "placeholder": "条件命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "简单模式下，conditions 组合判断成立时返回这里的值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": {
+            "field": "mode",
+            "equals": "simple"
+          }
+        },
+        {
+          "key": "group_logic",
+          "name": "group_logic",
+          "type": "select",
+          "label": "组间逻辑",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "OR",
+              "label": "OR"
+            },
+            {
+              "value": "AND",
+              "label": "AND"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "条件组模式下，各组判断完成后，再按这里的逻辑汇总。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": {
+            "field": "mode",
+            "equals": "groups"
+          }
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "条件未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "简单模式和条件组模式都会用到这个兜底值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "补充当前规则的说明",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议写清楚字段口径、模式选择原因和维护说明。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段7",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "复杂结构说明",
+          "text": "简单模式下请在 JSON 区维护 conditions；条件组模式下请在 JSON 区维护 groups。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "当前按 {{multi_mode_label}} 配置多字段判断，{{condition_or_group_summary}}，未命中返回 {{default}}",
+      "jsonKeys": [
+        "logic",
+        "conditions",
+        "result",
+        "default",
+        "group_logic",
+        "groups",
+        "remarks"
+      ],
+      "jsonExample": {
+        "logic": "AND",
+        "conditions": [],
+        "result": "",
+        "default": "",
+        "group_logic": "OR",
+        "groups": [],
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "这类配置适合多个字段联合决定输出结果的场景。当前已支持简单模式与条件组模式的动态切换，复杂的 conditions 或 groups 结构仍在 JSON 区维护。",
+      "effectText": "保存后会直接影响当前列按简单模式还是条件组模式判断，以及命中和未命中时的输出结果。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 多字段条件配置，当前为 {{multi_mode_label}}",
+      "workflowSteps": [
+        {
+          "label": "读取多个字段",
+          "text": "从 {{rule_source_name}} 读取多个条件字段，当前模式为 {{multi_mode_label}}"
+        },
+        {
+          "label": "按模式判断",
+          "text": "{{multi_mode_description}}"
+        },
+        {
+          "label": "返回结果",
+          "text": "{{multi_mode_result_description}}"
+        }
+      ]
+    },
+    "field_asset": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "数据概览字段+转换",
+      "subtitle": "先读取数据概览表字段，再按条件进行转换。",
+      "toneColor": "#0369a1",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "源字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "assets",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从数据概览表选择一个字段，先把该字段值取出来，再进行条件转换。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "preset_template",
+          "name": "preset_template",
+          "type": "select",
+          "label": "条件模板",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "",
+              "label": "不使用模板"
+            },
+            {
+              "value": "data_storage_status",
+              "label": "数据存储状态判断"
+            },
+            {
+              "value": "data_purpose_ad_class",
+              "label": "处理目的判断(A-D类)"
+            },
+            {
+              "value": "data_path_ad_class",
+              "label": "流转路径判断(A-D类)"
+            },
+            {
+              "value": "data_scenario_ad_class",
+              "label": "应用场景判断(A-D类)"
+            },
+            {
+              "value": "data_measure_ad_class",
+              "label": "安全措施判断(A-D类)"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "模板只影响 conditions 和默认值，便于快速生成常用判断逻辑。",
+          "optionValueKey": "index",
+          "transient": true,
+          "action": "apply_single_conditional_template",
+          "runtimeValueResolver": "detect_single_conditional_template",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "条件未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "如果所有条件都未命中，当前列返回这个兜底值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "补充当前字段转换规则的说明",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议补充当前列为什么要做转换，方便后续接线。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段5",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "转换规则",
+          "text": "conditions 数组在 JSON 编辑区维护。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "读取数据概览字段 {{source_value}}，按 {{condition_count}} 条条件转换后输出，当前 transform={{transform}}",
+      "jsonKeys": [
+        "source_value",
+        "conditions",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "conditions": [],
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于“先取字段，再按单字段条件转换结果”的场景。当前列的 transform 会保留原口径继续参与输出。",
+      "effectText": "保存后会直接影响当前列从数据概览表读取哪个字段，并按什么条件规则转换输出。",
+      "dependencyTextTemplate": "依赖数据概览表字段、conditions 条件数组和当前列 transform={{transform}}",
+      "workflowSteps": [
+        {
+          "label": "读取源字段",
+          "text": "从数据概览表读取 {{source_value}} 作为判断源值"
+        },
+        {
+          "label": "条件转换",
+          "text": "按 conditions 数组顺序匹配，当前共 {{condition_count}} 条条件"
+        },
+        {
+          "label": "结果输出",
+          "text": "命中后返回 result，未命中时返回 {{default}}，并保留当前 transform={{transform}} 的口径"
+        }
+      ]
+    },
+    "field_merge": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "合并结果字段+转换",
+      "subtitle": "先读取合并结果表字段，再按条件进行转换。",
+      "toneColor": "#0284c7",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "源字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "merge_results",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从合并结果表选择一个字段，先把该字段值取出来，再进行条件转换。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "preset_template",
+          "name": "preset_template",
+          "type": "select",
+          "label": "条件模板",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "",
+              "label": "不使用模板"
+            },
+            {
+              "value": "data_storage_status",
+              "label": "数据存储状态判断"
+            },
+            {
+              "value": "data_purpose_ad_class",
+              "label": "处理目的判断(A-D类)"
+            },
+            {
+              "value": "data_path_ad_class",
+              "label": "流转路径判断(A-D类)"
+            },
+            {
+              "value": "data_scenario_ad_class",
+              "label": "应用场景判断(A-D类)"
+            },
+            {
+              "value": "data_measure_ad_class",
+              "label": "安全措施判断(A-D类)"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "模板只影响 conditions 和默认值，便于快速生成常用判断逻辑。",
+          "optionValueKey": "index",
+          "transient": true,
+          "action": "apply_single_conditional_template",
+          "runtimeValueResolver": "detect_single_conditional_template",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "条件未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "如果所有条件都未命中，当前列返回这个兜底值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "补充当前字段转换规则的说明",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议补充当前列为什么要做转换，方便后续接线。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段5",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "转换规则",
+          "text": "conditions 数组在 JSON 编辑区维护。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "读取合并结果字段 {{source_value}}，按 {{condition_count}} 条条件转换后输出，当前 transform={{transform}}",
+      "jsonKeys": [
+        "source_value",
+        "conditions",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "conditions": [],
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于“先取合并结果表字段，再按单字段条件转换结果”的场景。当前列的 transform 会保留原口径继续参与输出。",
+      "effectText": "保存后会直接影响当前列从合并结果表读取哪个字段，并按什么条件规则转换输出。",
+      "dependencyTextTemplate": "依赖合并结果表字段、conditions 条件数组和当前列 transform={{transform}}",
+      "workflowSteps": [
+        {
+          "label": "读取源字段",
+          "text": "从合并结果表读取 {{source_value}} 作为判断源值"
+        },
+        {
+          "label": "条件转换",
+          "text": "按 conditions 数组顺序匹配，当前共 {{condition_count}} 条条件"
+        },
+        {
+          "label": "结果输出",
+          "text": "命中后返回 result，未命中时返回 {{default}}，并保留当前 transform={{transform}} 的口径"
+        }
+      ]
+    },
+    "vlookup": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "跨表查询",
+      "subtitle": "使用当前报表字段作为查找键，到数据概览表联查目标字段。",
+      "toneColor": "#0f766e",
+      "fields": [
+        {
+          "key": "lookup_key",
+          "name": "lookup_key",
+          "type": "field_select",
+          "label": "查找键字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从当前主数据源选择一个字段，作为联查时送入数据概览表的键值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "lookup_field",
+          "name": "lookup_field",
+          "type": "field_select",
+          "label": "返回字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "assets",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "命中资产行后，当前列最终返回这个字段的值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "如果联查失败，当前列输出这里填写的兜底值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "补充维护说明、特殊口径或业务解释",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "这部分文字会和规则一起保存，便于后期维护人员理解。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "使用 {{lookup_key}} 作为查找键，返回数据概览字段 {{lookup_field}}",
+      "jsonKeys": [
+        "lookup_key",
+        "lookup_field",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "lookup_key": "",
+        "lookup_field": "",
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "这类配置适合“当前表有键值，数据概览表里有标准结果”的场景。字段、说明和步骤文案都由当前动态定义驱动。",
+      "effectText": "保存后会直接影响当前列使用哪个字段做联查，以及最终返回哪一列资产信息。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 的查找键字段和数据概览表联查结果",
+      "workflowSteps": [
+        {
+          "label": "读取查找键",
+          "text": "从 {{rule_source_name}} 读取 {{lookup_key}} 作为联查键值"
+        },
+        {
+          "label": "进入数据概览表",
+          "text": "用查找键到数据概览表匹配目标资产行"
+        },
+        {
+          "label": "返回结果",
+          "text": "命中后返回 {{lookup_field}}，未命中时返回 {{default}}"
+        }
+      ]
+    },
+    "vlookup_with_mapping": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "跨表查询+映射",
+      "subtitle": "先经过公共配置映射，再到数据概览表联查。后续可以按 JSON 自定义为其他映射逻辑。",
+      "toneColor": "#0d9488",
+      "fields": [
+        {
+          "key": "lookup_key",
+          "name": "lookup_key",
+          "type": "field_select",
+          "label": "查找键字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "选择当前主数据源中的键字段，例如业务系统名称、资产名称等。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "mapping_config",
+          "name": "mapping_config",
+          "type": "public_config_select",
+          "label": "公共配置",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "mapping_table",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "这里可以接任意已登记的映射类公共配置，后续不局限于“业务系统名称映射”或“资产名称映射”。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "lookup_field",
+          "name": "lookup_field",
+          "type": "field_select",
+          "label": "返回字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "assets",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "映射并联查成功后，当前列最终返回的数据概览表字段。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "fallback_to_raw_lookup",
+          "name": "fallback_to_raw_lookup",
+          "type": "select",
+          "label": "映射未命中处理",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": false,
+              "label": "直接返回默认值"
+            },
+            {
+              "value": true,
+              "label": "回退原始值继续联查"
+            }
+          ],
+          "valueType": "boolean",
+          "title": "",
+          "text": "",
+          "description": "控制映射后的键值没有查到时，是否再使用原始键值补查一次。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "当映射和联查都没有得到结果时，当前列返回这个值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "记录当前列的接线说明、例外情况和维护备注",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议写清楚“为什么要先映射、再联查”，方便后续直接导入 JSON 时同步理解。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "先使用公共配置 {{mapping_config}} 转换 {{lookup_key}}，再查询 {{lookup_field}}",
+      "jsonKeys": [
+        "lookup_key",
+        "lookup_field",
+        "use_mapping",
+        "mapping_config",
+        "fallback_to_raw_lookup",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "lookup_key": "",
+        "lookup_field": "",
+        "use_mapping": true,
+        "mapping_config": "business_system_name_mapping",
+        "fallback_to_raw_lookup": false,
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {
+        "use_mapping": true
+      },
+      "saveTarget": "rule",
+      "description": "这是“先标准化，再联查”的动态版配置查询。公共配置、步骤说明和帮助文字都可以继续通过 JSON 定义替换。",
+      "effectText": "保存后会直接影响当前列先使用哪一个公共配置做转换，再按什么字段去数据概览表联查。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}}、公共配置 {{mapping_config}} 和数据概览表联查结果",
+      "workflowSteps": [
+        {
+          "label": "读取查找键",
+          "text": "从 {{rule_source_name}} 读取 {{lookup_key}} 作为原始查找键"
+        },
+        {
+          "label": "经过公共配置",
+          "text": "先用 {{mapping_config}} 对原始键值做名称转换，再进入数据概览表联查"
+        },
+        {
+          "label": "返回结果",
+          "text": "命中后返回 {{lookup_field}}；若未命中则按“映射未命中处理”和默认值规则输出"
+        }
+      ]
+    },
+    "public_config_mapping": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "公共配置直接映射",
+      "subtitle": "先读取当前字段值，再按公共配置映射后直接输出到当前列。",
+      "toneColor": "#0f766e",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "源字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从当前主数据源选择原始值字段，系统会对这个字段的值做公共配置转换。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "mapping_config",
+          "name": "mapping_config",
+          "type": "public_config_select",
+          "label": "公共配置",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "mapping_table",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "选择要使用的映射类公共配置，例如资产名称映射、业务系统名称映射。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "fallback_policy",
+          "name": "fallback_policy",
+          "type": "select",
+          "label": "未命中处理",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [
+            {
+              "value": "default",
+              "label": "返回默认值"
+            },
+            {
+              "value": "raw_value",
+              "label": "返回原始值"
+            },
+            {
+              "value": "empty",
+              "label": "返回空值"
+            }
+          ],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "控制当前值在公共配置中找不到映射结果时，当前列如何输出。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "当未命中处理选择“返回默认值”时，当前列输出这里填写的内容。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "记录当前列为什么要使用公共配置直接映射",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议记录当前列的原始值来源、使用的公共配置以及未命中处理口径。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "读取字段 {{source_value}}，使用公共配置 {{mapping_config}} 直接映射输出，未命中按 {{fallback_policy}} 处理",
+      "jsonKeys": [
+        "source_value",
+        "mapping_config",
+        "fallback_policy",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "mapping_config": "asset_name_mapping",
+        "fallback_policy": "default",
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {
+        "mapping_config": "asset_name_mapping",
+        "fallback_policy": "default"
+      },
+      "saveTarget": "rule",
+      "description": "适用于“当前字段值需要先标准化，再直接写回当前列”的场景，不再继续联查数据概览表。",
+      "effectText": "保存后会直接影响当前列从哪个源字段取值、使用哪个公共配置映射，以及未命中时如何回填结果。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 源字段和公共配置 {{mapping_config}} 的映射结果",
+      "workflowSteps": [
+        {
+          "label": "读取源字段",
+          "text": "从 {{rule_source_name}} 读取 {{source_value}} 作为原始值"
+        },
+        {
+          "label": "经过公共配置",
+          "text": "使用 {{mapping_config}} 对原始值进行名称转换"
+        },
+        {
+          "label": "返回结果",
+          "text": "命中时直接返回映射值，未命中时按 {{fallback_policy}} 和默认值规则输出"
+        }
+      ]
+    },
+    "ip_lookup": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "IP 查询",
+      "subtitle": "按 IP 从数据概览表反查其他字段。",
+      "toneColor": "#1d4ed8",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "IP 字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从当前主数据源中选择一个包含 IP 地址的字段。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "lookup_field",
+          "name": "lookup_field",
+          "type": "field_select",
+          "label": "返回字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "assets",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "这里保存的是数据概览表字段名，保持和现有 IP 查询口径一致。",
+          "optionValueKey": "name",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "default",
+          "name": "default",
+          "type": "text",
+          "label": "默认值",
+          "placeholder": "未命中时返回的值",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "如果按 IP 没有查到对应资产，则返回这里的内容。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "例如：按主机 IP 反查所属系统类型",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "用于补充这条 IP 反查规则的业务说明。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "使用 IP 字段 {{source_value}} 反查数据概览字段 {{lookup_field}}",
+      "jsonKeys": [
+        "source_value",
+        "lookup_field",
+        "default",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "lookup_field": "",
+        "default": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于“当前列先拿到 IP，再到数据概览表按 IP 反查资产信息”的场景。",
+      "effectText": "保存后会直接影响当前列使用哪个 IP 字段做反查，以及匹配成功后返回哪一个资产字段。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 的 IP 字段和数据概览表按 IP 反查结果",
+      "workflowSteps": [
+        {
+          "label": "读取 IP 字段",
+          "text": "从 {{rule_source_name}} 读取 {{source_value}} 作为反查 IP"
+        },
+        {
+          "label": "按 IP 匹配资产",
+          "text": "系统会用这个 IP 在数据概览表中查找匹配的资产记录"
+        },
+        {
+          "label": "返回目标字段",
+          "text": "命中后返回 {{lookup_field}}，未命中时返回 {{default}}"
+        }
+      ]
+    },
+    "field_assets_dynamic": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "动态生成",
+      "subtitle": "按数据概览字段和策略上下文动态拼装输出文本。",
+      "toneColor": "#7c3aed",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "源字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "assets",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "从数据概览表中选择一个字段，作为动态文本生成时的主要输入值。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "reference_column",
+          "name": "reference_column",
+          "type": "text",
+          "label": "参考列",
+          "placeholder": "例如 D",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "用于拼接或生成动态内容时的参考列标识，默认按现有口径使用 D。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "例如：取业务系统字段并按 D 列规则动态生成策略名称",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议记录当前动态生成规则的业务说明，方便维护。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "读取数据概览字段 {{source_value}}，按参考列 {{reference_column}} 生成内容",
+      "jsonKeys": [
+        "source_value",
+        "reference_column",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "reference_column": "D",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于策略名称、策略标题等需要按业务系统上下文和策略类型动态拼接文本的场景。",
+      "effectText": "保存后会直接影响当前列读取哪一个资产字段，以及按哪一个参考列参与动态文本生成。",
+      "dependencyTextTemplate": "依赖数据概览表字段 {{source_value}}、参考列 {{reference_column}} 和当前展开上下文",
+      "workflowSteps": [
+        {
+          "label": "读取配置参数",
+          "text": "当前配置会保存资产字段 {{source_value}} 和参考列 {{reference_column}}"
+        },
+        {
+          "label": "组合上下文",
+          "text": "导出时系统会结合当前业务系统上下文和展开出的策略类型生成动态文本"
+        },
+        {
+          "label": "写入当前列",
+          "text": "生成后的文本会直接写入当前列，影响当前报表的导出内容"
+        }
+      ]
+    },
+    "multi_strategy_config": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "多行展开规则",
+      "subtitle": "这是报表级共享配置，最终保存到 expansion_rules。",
+      "toneColor": "#a16207",
+      "fields": [
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段1",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "报表级共享规则",
+          "text": "该配置保存到当前报表的 expansion_rules，建议在 JSON 编辑区维护完整结构。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "当前维护多行展开规则，共 {{expansion_rule_count}} 类策略，入口角色为 {{expansion_role_label}}",
+      "jsonKeys": [
+        "expansion_rules"
+      ],
+      "jsonExample": {
+        "expansion_rules": {}
+      },
+      "initialValues": {},
+      "saveTarget": "config.expansion_rules",
+      "description": "这里维护当前报表的展开策略定义。每一个 strategy key 都会成为一类可展开策略，并同时影响对应的策略内容映射。",
+      "effectText": "保存后会直接影响当前报表的多行展开结果，并同步影响策略内容映射所使用的策略定义。",
+      "dependencyTextTemplate": "依赖当前报表的 expansion_rules，共 {{expansion_rule_count}} 类策略",
+      "workflowSteps": [
+        {
+          "label": "定义策略类型",
+          "text": "你在 expansion_rules 中定义的每一个 key，都会成为一类展开策略"
+        },
+        {
+          "label": "展开记录",
+          "text": "multi_strategy_config 会按这些规则把一条源记录展开成多条策略记录，并把策略类型写入对应列"
+        },
+        {
+          "label": "联动内容",
+          "text": "同一套 expansion_rules 还会同步影响 strategy_content_mapping 的返回内容"
+        }
+      ]
+    },
+    "strategy_content_mapping": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "策略内容映射",
+      "subtitle": "这是报表级共享配置，最终保存到 expansion_rules。",
+      "toneColor": "#b45309",
+      "fields": [
+        {
+          "key": "",
+          "name": "",
+          "type": "info",
+          "label": "字段1",
+          "placeholder": "",
+          "required": false,
+          "rows": 4,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "报表级共享规则",
+          "text": "该配置保存到当前报表的 expansion_rules，建议在 JSON 编辑区维护完整结构。",
+          "description": "",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "当前维护策略内容映射，共 {{expansion_rule_count}} 类策略，入口角色为 {{expansion_role_label}}",
+      "jsonKeys": [
+        "expansion_rules"
+      ],
+      "jsonExample": {
+        "expansion_rules": {}
+      },
+      "initialValues": {},
+      "saveTarget": "config.expansion_rules",
+      "description": "这里维护当前报表按策略类型返回内容文本所依赖的共享规则。底层仍然是同一套 expansion_rules。",
+      "effectText": "保存后会直接影响当前报表按策略类型返回什么内容文本，并同步影响多行展开共用的策略规则定义。",
+      "dependencyTextTemplate": "依赖当前报表的 expansion_rules，共 {{expansion_rule_count}} 类策略",
+      "workflowSteps": [
+        {
+          "label": "读取策略类型",
+          "text": "当前列会读取 multi_strategy_config 展开出来的策略类型 key"
+        },
+        {
+          "label": "映射内容",
+          "text": "strategy_content_mapping 会根据 strategy key，从 expansion_rules 中返回对应内容文本"
+        },
+        {
+          "label": "共享维护",
+          "text": "你在这里的修改，也会同步影响多行展开使用的同一套策略定义"
+        }
+      ]
+    },
+    "data_sample_mapper": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "数据样例映射",
+      "subtitle": "按“数据名称”匹配标准样例，决定最终脱敏后的导出值。",
+      "toneColor": "#4f46e5",
+      "fields": [
+        {
+          "key": "name_column_index",
+          "name": "name_column_index",
+          "type": "field_select",
+          "label": "数据名称字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "系统会用这个字段的值去“数据分级标准样例”中查标准记录。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "例如：取数据名称列，从数据分级标准样例中自动获取样例",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议补充当前样例映射的业务用途和维护说明。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "使用字段 {{name_column_index}} 作为数据名称去匹配样例标准",
+      "jsonKeys": [
+        "name_column_index",
+        "remarks"
+      ],
+      "jsonExample": {
+        "name_column_index": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于根据“数据名称”自动去样例标准库中查标准记录，再按标准记录自身分级处理样例值的场景。",
+      "effectText": "保存后会直接影响当前列读取哪一个“数据名称”字段去匹配样例标准，以及最终原样、脱敏或加密后的导出值。",
+      "dependencyTextTemplate": "依赖 {{rule_source_name}} 的数据名称字段，以及“数据分级标准样例”的匹配结果",
+      "workflowSteps": [
+        {
+          "label": "读取数据名称",
+          "text": "当前从 {{rule_source_name}} 读取 {{name_column_index}} 作为匹配键"
+        },
+        {
+          "label": "匹配样例标准",
+          "text": "系统会用该数据名称去“数据分级标准样例”中查找标准记录，同时读取该标准记录自己的 level"
+        },
+        {
+          "label": "按分级处理样例",
+          "text": "level 1-2 原样返回，level 3 做脱敏，level 4 及以上按加密口径处理后再写入当前列"
+        }
+      ]
+    },
+    "column_value_count": {
+      "enabled": true,
+      "version": "1.0",
+      "title": "列值统计",
+      "subtitle": "统计当前导出数据集中某一字段值的出现次数。",
+      "toneColor": "#15803d",
+      "fields": [
+        {
+          "key": "source_value",
+          "name": "source_value",
+          "type": "field_select",
+          "label": "统计字段",
+          "placeholder": "",
+          "required": true,
+          "rows": 4,
+          "dataSource": "rule_source",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "系统会统计这个字段当前值在本次导出数据集中的出现次数。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        },
+        {
+          "key": "remarks",
+          "name": "remarks",
+          "type": "textarea",
+          "label": "备注",
+          "placeholder": "例如：统计数据名称列在本次导出数据集中重复出现的次数",
+          "required": false,
+          "rows": 3,
+          "dataSource": "",
+          "configType": "",
+          "options": [],
+          "valueType": "",
+          "title": "",
+          "text": "",
+          "description": "建议写清楚当前统计口径，避免和全库统计混淆。",
+          "optionValueKey": "index",
+          "transient": false,
+          "action": "",
+          "runtimeValueResolver": "",
+          "visibleWhen": null
+        }
+      ],
+      "summaryTemplate": "统计字段 {{source_value}} 在当前导出数据集中的出现次数",
+      "jsonKeys": [
+        "source_value",
+        "remarks"
+      ],
+      "jsonExample": {
+        "source_value": "",
+        "remarks": ""
+      },
+      "initialValues": {},
+      "saveTarget": "rule",
+      "description": "适用于按当前导出数据集实时统计某一字段值出现频次，并把计数写回当前列的场景。",
+      "effectText": "保存后会直接影响当前列统计哪一个字段的值，并影响导出文件中的计数结果。",
+      "dependencyTextTemplate": "依赖当前导出数据集的全量频次统计结果，统计字段为 {{source_value}}",
+      "workflowSteps": [
+        {
+          "label": "选定统计键",
+          "text": "当前从 {{rule_source_name}} 读取 {{source_value}} 的值作为统计键"
+        },
+        {
+          "label": "预统计全量数据",
+          "text": "导出前，系统会基于当前导出数据集的全量记录先做一次值频次统计"
+        },
+        {
+          "label": "回填当前列",
+          "text": "当前行会用自己的统计键去频次结果中查值，再把出现次数写回当前列"
+        }
+      ]
+    }
+  }
+}

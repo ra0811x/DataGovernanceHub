@@ -1,0 +1,204 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-04-19",
+  "notes": "公共配置类型注册表。当前先统一业务系统名称映射与资产名称映射的类型定义、字段定义、能力定义与接口元数据，后续可继续扩展新的公共配置类型。",
+  "items": [
+    {
+      "key": "business_system_name_mapping",
+      "title": "公共配置",
+      "name": "业务系统名称映射",
+      "type": "mapping_table",
+      "category": "name_mapping",
+      "description": "用于将合并结果表中的业务系统名称转换为数据概览表中的标准名称。",
+      "enabled": true,
+      "version": "1.0",
+      "contract_role": "runtime",
+      "affects_export": true,
+      "effect_summary": "保存后会直接影响已接线报表导出。",
+      "editor_mode": "business_system_name_mapping",
+      "storage_type": "json_file",
+      "storage": {
+        "type": "json_file",
+        "file": "config/business_system_name_mapping.json",
+        "record_path": "mappings"
+      },
+      "capabilities": {
+        "detail": true,
+        "crud": true,
+        "import_export": true,
+        "frontend_edit": true,
+        "template_download": true
+      },
+      "apis": {
+        "detail_api": "/api/public-configs/business-system-name-mappings",
+        "save_api": "/api/public-configs/business-system-name-mappings/save",
+        "template_api": "/api/public-configs/business-system-name-mappings/template",
+        "import_api": "/api/public-configs/business-system-name-mappings/import",
+        "export_api": "/api/public-configs/business-system-name-mappings/export"
+      },
+      "primary_field": "source",
+      "display_fields": [
+        "source",
+        "target",
+        "enabled"
+      ],
+      "fields": [
+        {
+          "name": "source",
+          "label": "原始值",
+          "type": "text",
+          "required": true,
+          "searchable": true,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 220
+        },
+        {
+          "name": "target",
+          "label": "替换值",
+          "type": "text",
+          "required": true,
+          "searchable": true,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 220
+        },
+        {
+          "name": "enabled",
+          "label": "是否启用",
+          "type": "boolean",
+          "required": false,
+          "searchable": false,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 100,
+          "default_value": true
+        }
+      ],
+      "schema": {
+        "entry_type": "source_target_mapping",
+        "supports_enable_flag": true,
+        "supports_import_export": true,
+        "supports_frontend_edit": true,
+        "editor_mode": "business_system_name_mapping",
+        "field_meta": {
+          "source_label": "原始值",
+          "target_label": "替换值",
+          "enabled_label": "是否启用"
+        },
+        "reserved_match_types": [
+          "exact"
+        ],
+        "import_columns": [
+          "原始值",
+          "替换值",
+          "是否启用"
+        ]
+      },
+      "config": {
+        "storage_file": "config/business_system_name_mapping.json",
+        "template_filename": "业务系统名称映射_导入模板.xlsx",
+        "export_filename": "业务系统名称映射_导出.xlsx",
+        "mappings": []
+      }
+    },
+    {
+      "key": "asset_name_mapping",
+      "title": "公共配置",
+      "name": "资产名称映射",
+      "type": "mapping_table",
+      "category": "name_mapping",
+      "description": "用于将源数据中的资产名称转换为统一口径的标准资产名称。",
+      "enabled": true,
+      "version": "1.0",
+      "contract_role": "reserve",
+      "affects_export": false,
+      "effect_summary": "配置层已初始化，具体使用方式待后续按报表列决定。",
+      "editor_mode": "asset_name_mapping",
+      "storage_type": "json_file",
+      "storage": {
+        "type": "json_file",
+        "file": "config/asset_name_mapping.json",
+        "record_path": "mappings"
+      },
+      "capabilities": {
+        "detail": true,
+        "crud": true,
+        "import_export": true,
+        "frontend_edit": true,
+        "template_download": true
+      },
+      "apis": {
+        "detail_api": "/api/public-configs/asset-name-mappings",
+        "template_api": "/api/public-configs/asset-name-mappings/template",
+        "import_api": "/api/public-configs/asset-name-mappings/import",
+        "export_api": "/api/public-configs/asset-name-mappings/export"
+      },
+      "primary_field": "source",
+      "display_fields": [
+        "source",
+        "target",
+        "enabled"
+      ],
+      "fields": [
+        {
+          "name": "source",
+          "label": "原始值",
+          "type": "text",
+          "required": true,
+          "searchable": true,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 220
+        },
+        {
+          "name": "target",
+          "label": "替换值",
+          "type": "text",
+          "required": true,
+          "searchable": true,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 220
+        },
+        {
+          "name": "enabled",
+          "label": "是否启用",
+          "type": "boolean",
+          "required": false,
+          "searchable": false,
+          "editable": true,
+          "visible_in_list": true,
+          "width": 100,
+          "default_value": true
+        }
+      ],
+      "schema": {
+        "entry_type": "source_target_mapping",
+        "supports_enable_flag": true,
+        "supports_import_export": true,
+        "supports_frontend_edit": true,
+        "editor_mode": "asset_name_mapping",
+        "field_meta": {
+          "source_label": "原始值",
+          "target_label": "替换值",
+          "enabled_label": "是否启用"
+        },
+        "reserved_match_types": [
+          "exact"
+        ],
+        "import_columns": [
+          "原始值",
+          "替换值",
+          "是否启用"
+        ]
+      },
+      "config": {
+        "storage_file": "config/asset_name_mapping.json",
+        "template_filename": "资产名称映射_导入模板.xlsx",
+        "export_filename": "资产名称映射_导出.xlsx",
+        "mappings": []
+      }
+    }
+  ]
+}

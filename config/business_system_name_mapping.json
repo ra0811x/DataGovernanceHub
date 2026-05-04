@@ -1,0 +1,194 @@
+{
+  "name": "公共配置",
+  "description": "用于将合并结果表中的业务系统名称转换为数据概览表中的标准名称",
+  "version": "1.0",
+  "last_updated": "2026-04-20",
+  "total_count": 28,
+  "mappings": [
+    {
+      "id": 1,
+      "source": "4A系统",
+      "target": "中国移动湖北公司业务支撑系统4A安全管理平台",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "source": "OA业务支撑",
+      "target": "OA系统",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "source": "OA业务管理",
+      "target": "OA系统",
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "source": "RUEI新库",
+      "target": "网厅系统",
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "source": "云外设中心",
+      "target": "IT云管平台",
+      "enabled": true
+    },
+    {
+      "id": 6,
+      "source": "公共参数",
+      "target": "计费系统",
+      "enabled": true
+    },
+    {
+      "id": 7,
+      "source": "卡券中心",
+      "target": "支付系统",
+      "enabled": true
+    },
+    {
+      "id": 8,
+      "source": "大数据系统",
+      "target": "大数据分析平台",
+      "enabled": true
+    },
+    {
+      "id": 9,
+      "source": "安全系统",
+      "target": "数据安全管控平台",
+      "enabled": true
+    },
+    {
+      "id": 10,
+      "source": "应急开机",
+      "target": "计费系统",
+      "enabled": true
+    },
+    {
+      "id": 11,
+      "source": "总控平台",
+      "target": "IT云管平台",
+      "enabled": true
+    },
+    {
+      "id": 12,
+      "source": "无纸化",
+      "target": "无纸化系统",
+      "enabled": true
+    },
+    {
+      "id": 13,
+      "source": "智慧零售",
+      "target": "智慧中台",
+      "enabled": true
+    },
+    {
+      "id": 14,
+      "source": "服开测试",
+      "target": "服务开通业务",
+      "enabled": true
+    },
+    {
+      "id": 15,
+      "source": "消息中心",
+      "target": "客服系统",
+      "enabled": true
+    },
+    {
+      "id": 16,
+      "source": "湖北移动业务支撑系统4A安全管理平台",
+      "target": "中国移动湖北公司业务支撑系统4A安全管理平台",
+      "enabled": true
+    },
+    {
+      "id": 17,
+      "source": "湖北移动业务运营支撑系统",
+      "target": "BOSS系统",
+      "enabled": true
+    },
+    {
+      "id": 18,
+      "source": "湖北移动业支运营支撑系统",
+      "target": "BOSS系统",
+      "enabled": true
+    },
+    {
+      "id": 19,
+      "source": "物联网水印",
+      "target": "态势感知系统",
+      "enabled": true
+    },
+    {
+      "id": 20,
+      "source": "短厅业务",
+      "target": "掌微厅系统",
+      "enabled": true
+    },
+    {
+      "id": 21,
+      "source": "短彩信",
+      "target": "支付系统",
+      "enabled": true
+    },
+    {
+      "id": 22,
+      "source": "稽核系统",
+      "target": "营收稽核系统",
+      "enabled": true
+    },
+    {
+      "id": 23,
+      "source": "营业测试",
+      "target": "计费系统",
+      "enabled": true
+    },
+    {
+      "id": 24,
+      "source": "营业系统",
+      "target": "计费系统",
+      "enabled": true
+    },
+    {
+      "id": 25,
+      "source": "规则中心",
+      "target": "计费系统",
+      "enabled": true
+    },
+    {
+      "id": 26,
+      "source": "订单中心A",
+      "target": "CRM系统",
+      "enabled": true
+    },
+    {
+      "id": 27,
+      "source": "账务结算",
+      "target": "账务系统",
+      "enabled": true
+    },
+    {
+      "id": 28,
+      "source": "运控系统",
+      "target": "能开变现业务",
+      "enabled": true
+    }
+  ],
+  "notes": "应用报表：业支10002(C列返回文字)、信安10001(D列返回代码)",
+  "usage": {
+    "yeji_10002": {
+      "report": "业支10002-数据库资产字段信息表",
+      "column": "C列(所属系统类型)",
+      "returns": "所属系统类型（文字）",
+      "lookup_field": "22",
+      "example": "OA业务支撑 → OA系统"
+    },
+    "xinan_10001": {
+      "report": "信安10001-数据资产字段信息表",
+      "column": "D列(所属系统类型)",
+      "returns": "所属系统类型（代码）",
+      "lookup_field": "21",
+      "example": "OA系统 → 301"
+    }
+  }
+}

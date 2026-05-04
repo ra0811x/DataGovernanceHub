@@ -1,0 +1,191 @@
+{
+  "data_levels": {
+    "1": {
+      "name": "一级数据",
+      "description": "公开数据",
+      "action": "none",
+      "icon": "🟢"
+    },
+    "2": {
+      "name": "二级数据",
+      "description": "内部数据",
+      "action": "none",
+      "icon": "🔵"
+    },
+    "3": {
+      "name": "三级数据",
+      "description": "敏感数据",
+      "action": "mask",
+      "icon": "🟠"
+    },
+    "4": {
+      "name": "四级数据",
+      "description": "机密数据",
+      "action": "encrypt",
+      "icon": "🔴"
+    }
+  },
+  "sensitive_types": {
+    "person_name": {
+      "name": "客户姓名",
+      "description": "客户个人姓名",
+      "data_level": 3,
+      "icon": "👤",
+      "mask_rule": "keep_first_1",
+      "encrypt_length": 16,
+      "examples": ["张三", "李四", "王五"],
+      "masked_example": "张*"
+    },
+    "id_card": {
+      "name": "身份证",
+      "description": "中华人民共和国居民身份证",
+      "data_level": 4,
+      "icon": "🪪",
+      "mask_rule": "keep_6_4",
+      "encrypt_length": 24,
+      "examples": ["110101199001011008", "123456789012345"],
+      "masked_example": "110101***********008"
+    },
+    "passport": {
+      "name": "护照",
+      "description": "中华人民共和国护照",
+      "data_level": 4,
+      "icon": "🛂",
+      "mask_rule": "keep_first_3_last_3",
+      "encrypt_length": 24,
+      "examples": ["E12345678", "P12345678"],
+      "masked_example": "E12***678"
+    },
+    "phone_mobile": {
+      "name": "手机号",
+      "description": "移动电话号码",
+      "data_level": 3,
+      "icon": "📱",
+      "mask_rule": "keep_3_4",
+      "encrypt_length": 16,
+      "examples": ["13800138000", "15912345678"],
+      "masked_example": "138****8000"
+    },
+    "phone_landline": {
+      "name": "座机号",
+      "description": "固定电话号码",
+      "data_level": 2,
+      "icon": "☎️",
+      "mask_rule": "keep_area_last_4",
+      "encrypt_length": 16,
+      "examples": ["010-12345678", "021-87654321"],
+      "masked_example": "010-****5678"
+    },
+    "email": {
+      "name": "邮箱地址",
+      "description": "电子邮件地址（如139邮箱）",
+      "data_level": 3,
+      "icon": "📧",
+      "mask_rule": "email",
+      "encrypt_length": 32,
+      "examples": ["test@139.com", "user@example.com"],
+      "masked_example": "t***@139.com"
+    },
+    "bank_account": {
+      "name": "银行账户",
+      "description": "银行账号",
+      "data_level": 4,
+      "icon": "🏦",
+      "mask_rule": "keep_4_4",
+      "encrypt_length": 24,
+      "examples": ["6222021234567889920", "6217000012345678"],
+      "masked_example": "6222********9920"
+    },
+    "id_card_number": {
+      "name": "身份证号码",
+      "description": "身份证号码",
+      "data_level": 4,
+      "icon": "🪪",
+      "mask_rule": "keep_6_4",
+      "encrypt_length": 24,
+      "examples": ["110101199001011008"],
+      "masked_example": "110101***********008"
+    },
+    "driver_license": {
+      "name": "驾照编号",
+      "description": "驾驶证号",
+      "data_level": 4,
+      "icon": "🚗",
+      "mask_rule": "keep_6_4",
+      "encrypt_length": 24,
+      "examples": ["110101199001011008"],
+      "masked_example": "110101***********008"
+    }
+  },
+  "column_mapping": {
+    "assets": {
+      "客户姓名": "person_name",
+      "姓名": "person_name",
+      "持卡人姓名": "person_name",
+      "身份证": "id_card",
+      "身份证号": "id_card",
+      "身份证号码": "id_card_number",
+      "护照": "passport",
+      "护照号": "passport",
+      "手机": "phone_mobile",
+      "手机号": "phone_mobile",
+      "移动电话": "phone_mobile",
+      "联系电话": "phone_mobile",
+      "座机": "phone_landline",
+      "座机号": "phone_landline",
+      "固定电话": "phone_landline",
+      "电话": "phone_landline",
+      "邮箱": "email",
+      "邮箱地址": "email",
+      "邮件": "email",
+      "银行账户": "bank_account",
+      "银行卡号": "bank_account",
+      "账号": "bank_account",
+      "驾照": "driver_license",
+      "驾照号": "driver_license",
+      "驾驶证号": "driver_license"
+    }
+  },
+  "mask_rules": {
+    "keep_first_1": {
+      "description": "保留首字",
+      "function": "mask_keep_first_n",
+      "params": {"keep_first": 1, "keep_last": 0}
+    },
+    "keep_6_4": {
+      "description": "保留前6位和后4位",
+      "function": "mask_keep_first_n",
+      "params": {"keep_first": 6, "keep_last": 4}
+    },
+    "keep_first_3_last_3": {
+      "description": "保留前3位和后3位",
+      "function": "mask_keep_first_n",
+      "params": {"keep_first": 3, "keep_last": 3}
+    },
+    "keep_3_4": {
+      "description": "保留前3位和后4位",
+      "function": "mask_keep_first_n",
+      "params": {"keep_first": 3, "keep_last": 4}
+    },
+    "keep_area_last_4": {
+      "description": "保留区号和后4位",
+      "function": "mask_phone_landline",
+      "params": {}
+    },
+    "email": {
+      "description": "邮箱脱敏",
+      "function": "mask_email",
+      "params": {}
+    },
+    "keep_4_4": {
+      "description": "保留前4位和后4位",
+      "function": "mask_keep_first_n",
+      "params": {"keep_first": 4, "keep_last": 4}
+    }
+  },
+  "settings": {
+    "default_masked": true,
+    "allow_export_unmasked": false,
+    "mask_character": "*"
+  }
+}

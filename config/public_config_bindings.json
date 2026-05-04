@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-20",
+  "notes": "当前仅登记已经真实生效的公共配置绑定关系。业务系统名称映射已接线，资产名称映射仍按具体列位接线后再登记。",
+  "items": [
+    {
+      "id": "bind-yeji-i_10600_10002-c-001",
+      "config_key": "business_system_name_mapping",
+      "category": "yeji",
+      "report_code": "i_10600_10002",
+      "report_name": "数据资产字段信息表",
+      "target_column": "C",
+      "enabled": true,
+      "priority": 10,
+      "conditions": {},
+      "fallback_policy": "continue_with_raw_value",
+      "remarks": "所属系统类型（文字）回填前，先对业务系统名称做标准化映射。"
+    },
+    {
+      "id": "bind-smc-attachment_3-d-001",
+      "config_key": "asset_name_mapping",
+      "category": "smc",
+      "report_code": "attachment_3",
+      "report_name": "数据资产清单",
+      "target_column": "D",
+      "enabled": true,
+      "priority": 10,
+      "conditions": {},
+      "fallback_policy": "continue_with_raw_value",
+      "remarks": "所属系统类型（代码）回填前，先读取合并结果表数据源名称，并通过资产名称映射转换为数据资产名称。"
+    },
+    {
+      "id": "bind-smc-attachment_3-c-001",
+      "config_key": "asset_name_mapping",
+      "category": "smc",
+      "report_code": "attachment_3",
+      "report_name": "数据资产清单",
+      "target_column": "C",
+      "enabled": true,
+      "priority": 10,
+      "conditions": {},
+      "fallback_policy": "raw_value",
+      "remarks": "C列回填前，先读取合并结果表数据源名称（索引12）的原始值并执行资产名称映射，命中后直接输出映射结果；未命中时回填原始值。"
+    },
+    {
+      "id": "bind-xinan-10001-d-001",
+      "config_key": "business_system_name_mapping",
+      "category": "xinan",
+      "report_code": "10001",
+      "report_name": "数据资产字段信息表",
+      "target_column": "D",
+      "enabled": true,
+      "priority": 10,
+      "conditions": {},
+      "fallback_policy": "continue_with_raw_value",
+      "remarks": "所属系统类型（代码）回填前，先对业务系统名称做标准化映射。"
+    }
+  ]
+}

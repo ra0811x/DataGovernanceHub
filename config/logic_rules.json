@@ -1,0 +1,612 @@
+{
+  "rules": {
+    "data_level_to_storage": {
+      "id": "data_level_to_storage",
+      "name": "单字段条件_数据分级_存储状态判断",
+      "type": "conditional",
+      "description": "标准单字段条件规则。根据数据分级字段值匹配条件列表，命中后返回对应存储状态，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 10,
+        "field_name": "数据分级"
+      },
+      "conditions": [
+        {
+          "match": "1",
+          "result": "未处理"
+        },
+        {
+          "match": "2",
+          "result": "未处理"
+        },
+        {
+          "match": "3",
+          "result": "数据脱敏处理"
+        },
+        {
+          "match": "4",
+          "result": "数据加密处理"
+        }
+      ],
+      "default": "未处理",
+      "usage_count": 3,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "P",
+          "target_name": "数据存储状态"
+        },
+        {
+          "category": "smc",
+          "report_code": "attachment_3",
+          "report_name": "数据资产清单",
+          "target_column": "Q",
+          "target_name": "数据存储状态"
+        },
+        {
+          "category": "xinan",
+          "report_code": "10001",
+          "report_name": "数据资产字段信息表",
+          "target_column": "Q",
+          "target_name": "数据存储状态"
+        }
+      ],
+      "created_at": "2026-03-05",
+      "updated_at": "2026-03-09"
+    },
+    "data_source_judge_crm": {
+      "id": "data_source_judge_crm",
+      "name": "多字段条件组_数据来源_归类判断",
+      "type": "conditional_groups",
+      "description": "标准多字段条件组规则。根据多个字段的条件组组合关系进行归类判断，组内按 AND 判断，组间按 OR 汇总，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 13,
+        "field_name": "业务系统名称"
+      },
+      "group_logic": "OR",
+      "groups": [
+        {
+          "description": "业务系统字段包含 CRM 且数据名称字段包含 身份证",
+          "logic": "AND",
+          "conditions": [
+            {
+              "field_index": 13,
+              "match": "CRM",
+              "operator": "contains"
+            },
+            {
+              "field_index": 8,
+              "match": "身份证",
+              "operator": "contains"
+            }
+          ],
+          "result": "用户提供"
+        },
+        {
+          "description": "业务系统字段包含 CRM 且数据名称字段包含 证件",
+          "logic": "AND",
+          "conditions": [
+            {
+              "field_index": 13,
+              "match": "CRM",
+              "operator": "contains"
+            },
+            {
+              "field_index": 8,
+              "match": "证件",
+              "operator": "contains"
+            }
+          ],
+          "result": "用户提供"
+        }
+      ],
+      "default": "生产运营中产生",
+      "usage_count": 1,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "Y",
+          "target_name": "数据来源"
+        }
+      ],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "ad_class_purpose": {
+      "id": "ad_class_purpose",
+      "name": "单字段条件_数据分类_留痕判断",
+      "type": "conditional",
+      "description": "标准单字段条件规则。根据数据分类字段值匹配条件列表，命中指定前缀后返回留痕结果，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 9,
+        "field_name": "数据分类"
+      },
+      "conditions": [
+        {
+          "match": "A",
+          "operator": "startswith",
+          "result": "数据留痕"
+        },
+        {
+          "match": "B",
+          "operator": "startswith",
+          "result": "数据留痕"
+        },
+        {
+          "match": "C",
+          "operator": "startswith",
+          "result": "数据留痕"
+        },
+        {
+          "match": "D",
+          "operator": "startswith",
+          "result": "数据留痕"
+        }
+      ],
+      "default": "",
+      "usage_count": 3,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "S",
+          "target_name": "处理目的"
+        },
+        {
+          "category": "smc",
+          "report_code": "attachment_3",
+          "report_name": "数据资产清单",
+          "target_column": "T",
+          "target_name": "处理目的"
+        },
+        {
+          "category": "xinan",
+          "report_code": "10001",
+          "report_name": "数据资产字段信息表",
+          "target_column": "T",
+          "target_name": "处理目的"
+        }
+      ],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "ad_class_path": {
+      "id": "ad_class_path",
+      "name": "单字段条件_数据分类_流转路径判断",
+      "type": "conditional",
+      "description": "标准单字段条件规则。根据数据分类字段值匹配条件列表，命中指定前缀后返回流转路径结论，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 9,
+        "field_name": "数据分类"
+      },
+      "conditions": [
+        {
+          "match": "A",
+          "operator": "startswith",
+          "result": "不进行外部流转"
+        },
+        {
+          "match": "B",
+          "operator": "startswith",
+          "result": "不进行外部流转"
+        },
+        {
+          "match": "C",
+          "operator": "startswith",
+          "result": "不进行外部流转"
+        },
+        {
+          "match": "D",
+          "operator": "startswith",
+          "result": "不进行外部流转"
+        }
+      ],
+      "default": "",
+      "usage_count": 3,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "T",
+          "target_name": "流转路径"
+        },
+        {
+          "category": "smc",
+          "report_code": "attachment_3",
+          "report_name": "数据资产清单",
+          "target_column": "U",
+          "target_name": "流转路径"
+        },
+        {
+          "category": "xinan",
+          "report_code": "10001",
+          "report_name": "数据资产字段信息表",
+          "target_column": "U",
+          "target_name": "流转路径"
+        }
+      ],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "ad_class_scenario": {
+      "id": "ad_class_scenario",
+      "name": "单字段条件_数据分类_业务场景判断",
+      "type": "conditional",
+      "description": "标准单字段条件规则。根据数据分类字段值匹配条件列表，命中指定前缀后返回业务场景，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 9,
+        "field_name": "数据分类"
+      },
+      "conditions": [
+        {
+          "match": "A",
+          "operator": "startswith",
+          "result": "业务数据安全管理"
+        },
+        {
+          "match": "B",
+          "operator": "startswith",
+          "result": "业务数据安全管理"
+        },
+        {
+          "match": "C",
+          "operator": "startswith",
+          "result": "业务数据安全管理"
+        },
+        {
+          "match": "D",
+          "operator": "startswith",
+          "result": "业务数据安全管理"
+        }
+      ],
+      "default": "",
+      "usage_count": 3,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "U",
+          "target_name": "业务场景"
+        },
+        {
+          "category": "smc",
+          "report_code": "attachment_3",
+          "report_name": "数据资产清单",
+          "target_column": "V",
+          "target_name": "业务场景"
+        },
+        {
+          "category": "xinan",
+          "report_code": "10001",
+          "report_name": "数据资产字段信息表",
+          "target_column": "V",
+          "target_name": "业务场景"
+        }
+      ],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "guarantee_measures": {
+      "id": "guarantee_measures",
+      "name": "多字段条件组_保障措施_判断",
+      "type": "conditional_groups",
+      "description": "标准多字段条件组规则。根据数据分类和数据分级的组合关系返回保障措施结果，组间按 OR 汇总。",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 9,
+        "field_name": "数据分类"
+      },
+      "group_logic": "OR",
+      "groups": [
+        {
+          "description": "数据分类属于 A-D 且数据分级为 1-2",
+          "logic": "AND",
+          "conditions": [
+            {
+              "field_index": 9,
+              "match": "^[ABCD]",
+              "regex": true
+            },
+            {
+              "field_index": 10,
+              "match": "(1|2)",
+              "regex": true
+            }
+          ],
+          "result": "4A管控"
+        },
+        {
+          "description": "数据分类属于 A-D 且数据分级为 3-4",
+          "logic": "AND",
+          "conditions": [
+            {
+              "field_index": 9,
+              "match": "^[ABCD]",
+              "regex": true
+            },
+            {
+              "field_index": 10,
+              "match": "(3|4)",
+              "regex": true
+            }
+          ],
+          "result": "4A金库管控"
+        }
+      ],
+      "default": "",
+      "notes": "标准规则已按当前报表实际落地结构统一为条件组形式，索引口径与实际导出一致。",
+      "usage_count": 3,
+      "used_in": [
+        {
+          "category": "yeji",
+          "report_code": "i_10600_10002",
+          "report_name": "数据资产字段信息表",
+          "target_column": "V",
+          "target_name": "保障措施"
+        },
+        {
+          "category": "smc",
+          "report_code": "attachment_3",
+          "report_name": "数据资产清单",
+          "target_column": "W",
+          "target_name": "保障措施"
+        },
+        {
+          "category": "xinan",
+          "report_code": "10001",
+          "report_name": "数据资产字段信息表",
+          "target_column": "W",
+          "target_name": "保障措施"
+        }
+      ],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "xinan_status_conditions": {
+      "id": "xinan_status_conditions",
+      "name": "单字段条件_备注状态_状态判断",
+      "type": "conditional",
+      "description": "标准单字段条件规则。根据备注字段中的状态关键词返回状态结果，未命中时返回默认值。",
+      "source_field": {
+        "data_source": "assets",
+        "field_index": 19,
+        "field_name": "备注"
+      },
+      "conditions": [
+        {
+          "match": "已扫描",
+          "result": "新增"
+        },
+        {
+          "match": "已下线",
+          "result": "删除"
+        }
+      ],
+      "default": "新增",
+      "usage_count": 1,
+      "used_in": [
+        {
+          "category": "xinan",
+          "report_code": "00000",
+          "report_name": "数据资产汇总表",
+          "target_column": "K",
+          "target_name": "状态"
+        }
+      ],
+      "created_at": "2026-04-22",
+      "updated_at": "2026-04-22"
+    },
+    "vlookup_system_name_example": {
+      "id": "vlookup_system_name_example",
+      "name": "跨表查询示例-业务系统名称映射",
+      "type": "vlookup_assets",
+      "description": "通过业务系统名称在数据概览表中查询所属系统类型",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 12,
+        "field_name": "业务系统名称"
+      },
+      "lookup_key": 12,
+      "lookup_field": 4,
+      "default": "",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "vlookup_system_type_with_mapping_example": {
+      "id": "vlookup_system_type_with_mapping_example",
+      "name": "跨表查询+映射示例-业务系统类型查询",
+      "type": "vlookup_assets_with_mapping",
+      "description": "先通过业务系统名称映射转换，再查询所属系统类型",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 12,
+        "field_name": "业务系统名称"
+      },
+      "lookup_key": 12,
+      "lookup_field": 22,
+      "use_mapping": true,
+      "mapping_config": "business_system_name_mapping",
+      "default": "",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "field_asset_example": {
+      "id": "field_asset_example",
+      "name": "字段取值示例-数据概览表数据分类",
+      "type": "field_index_assets",
+      "description": "从数据概览表提取数据分类字段",
+      "source_field": {
+        "data_source": "assets",
+        "field_index": 6,
+        "field_name": "数据分类"
+      },
+      "source_value": "6",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "field_merge_example": {
+      "id": "field_merge_example",
+      "name": "字段取值示例-合并结果表业务系统",
+      "type": "field_index_merge_results",
+      "description": "从合并结果表提取业务系统名称字段",
+      "source_field": {
+        "data_source": "merge_results",
+        "field_index": 12,
+        "field_name": "业务系统名称"
+      },
+      "source_value": "12",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "fixed_value_company_example": {
+      "id": "fixed_value_company_example",
+      "name": "固定值示例-公司名称",
+      "type": "fixed",
+      "description": "填充固定值：湖北移动",
+      "source_value": "湖北移动",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "fixed_value_department_example": {
+      "id": "fixed_value_department_example",
+      "name": "固定值示例-所属部门",
+      "type": "fixed",
+      "description": "填充固定值：数智化部",
+      "source_value": "数智化部",
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    },
+    "data_sample_mapper_example": {
+      "id": "data_sample_mapper_example",
+      "name": "数据样例映射-数据名称获取样例",
+      "type": "data_sample_mapper",
+      "description": "依据数据名称字段的值从数据分级标准样例获取数据样例",
+      "name_column_index": 10,
+      "usage_count": 0,
+      "used_in": [],
+      "created_at": "2026-03-09",
+      "updated_at": "2026-03-09"
+    }
+  },
+  "rule_types_reference": {
+    "sequence": {
+      "id": "sequence",
+      "name": "自动递增序号",
+      "category": "basic",
+      "description": "为每行数据自动生成递增的序号"
+    },
+    "fixed": {
+      "id": "fixed",
+      "name": "固定值",
+      "category": "basic",
+      "description": "为所有行填充固定的值"
+    },
+    "field_index_assets": {
+      "id": "field_index_assets",
+      "name": "从数据概览表按索引取值",
+      "category": "field",
+      "description": "从数据概览表按列索引获取数据"
+    },
+    "field_index_merge_results": {
+      "id": "field_index_merge_results",
+      "name": "从合并结果表按索引取值",
+      "category": "field",
+      "description": "从合并结果表按JSON列索引获取数据"
+    },
+    "vlookup_assets_with_mapping": {
+      "id": "vlookup_assets_with_mapping",
+      "name": "VLOOKUP+映射字典",
+      "category": "lookup",
+      "description": "先通过映射字典转换键值，再VLOOKUP查询数据概览表"
+    },
+    "vlookup_assets": {
+      "id": "vlookup_assets",
+      "name": "VLOOKUP跨表查询",
+      "category": "lookup",
+      "description": "通过某个字段的值在数据概览表中查找并返回另一字段的值"
+    },
+    "lookup_ip": {
+      "id": "lookup_ip",
+      "name": "IP地址查询",
+      "category": "lookup",
+      "description": "通过IP地址在数据概览表中查询IP相关的归属、类型等信息"
+    },
+    "field_assets_with_transform": {
+      "id": "field_assets_with_transform",
+      "name": "字段提取+条件转换（数据概览表）",
+      "category": "advanced",
+      "description": "从数据概览表提取字段值，并根据条件进行转换处理"
+    },
+    "conditional": {
+      "id": "conditional",
+      "name": "单字段条件判断",
+      "category": "conditional",
+      "description": "根据单个字段的值进行条件判断返回不同结果"
+    },
+    "conditional_groups": {
+      "id": "conditional_groups",
+      "name": "多字段条件组判断（OR逻辑）",
+      "category": "conditional",
+      "description": "多字段条件组判断，组内为AND逻辑，组间为OR逻辑"
+    },
+    "data_sample_mapper": {
+      "id": "data_sample_mapper",
+      "name": "数据样例映射+敏感数据脱敏",
+      "category": "advanced",
+      "description": "根据数据名称从映射表获取样例，并根据数据分级自动脱敏或加密"
+    },
+    "field_merge_with_transform": {
+      "id": "field_merge_with_transform",
+      "name": "字段提取+正则转换",
+      "category": "advanced",
+      "description": "从多列提取数据并进行正则表达式转换"
+    },
+    "field_assets_dynamic": {
+      "id": "field_assets_dynamic",
+      "name": "动态生成值",
+      "category": "advanced",
+      "description": "根据当前行的其他列值动态生成新值"
+    },
+    "multi_strategy_config": {
+      "id": "multi_strategy_config",
+      "name": "多策略展开配置",
+      "category": "advanced",
+      "description": "为每条源数据生成多条记录，每条对应不同的策略"
+    },
+    "strategy_content_mapping": {
+      "id": "strategy_content_mapping",
+      "name": "策略内容映射",
+      "category": "advanced",
+      "description": "根据策略类型返回对应的策略内容描述"
+    },
+    "column_value_count": {
+      "id": "column_value_count",
+      "name": "列值统计计数",
+      "category": "conditional",
+      "description": "统计某列的值在整个数据集中的出现次数，用于数据条数统计"
+    }
+  }
+}

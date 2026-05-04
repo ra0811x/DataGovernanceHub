@@ -1,0 +1,6 @@
+﻿{
+  "enabled": false,
+  "rounding": "floor",
+  "keep_at_least_one": true,
+  "rules": []
+}

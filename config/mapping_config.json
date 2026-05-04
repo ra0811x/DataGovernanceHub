@@ -1,0 +1,1928 @@
+{
+  "reports": {
+    "yeji": {
+      "i_10600_10001": {
+        "category": "业支上报",
+        "data_source": "assets",
+        "data_start_row": 5,
+        "filter_config": {
+          "enabled": false
+        },
+        "mapping_rules": [
+          {
+            "description": "自动递增序号",
+            "remarks": "",
+            "source_type": "sequence",
+            "target_column": "A",
+            "target_name": "序号"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "湖北移动",
+            "target_column": "B",
+            "target_name": "公司"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "数智化部",
+            "target_column": "C",
+            "target_name": "业务部门"
+          },
+          {
+            "description": "数据概览表的业务系统列（索引4）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "4",
+            "target_column": "D",
+            "target_name": "业务系统名称",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的数据资产名称列（索引5），原样输出",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "5",
+            "target_column": "E",
+            "target_name": "数据资产名称",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "业支网",
+            "target_column": "F",
+            "target_name": "网络"
+          },
+          {
+            "description": "数据概览表的IP地址列（索引7）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "7",
+            "target_column": "G",
+            "target_name": "IP地址",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的端口号列（索引8）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "8",
+            "target_column": "H",
+            "target_name": "端口",
+            "transform": ""
+          },
+          {
+            "description": "留空",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "I",
+            "target_name": "集群IP:端口"
+          },
+          {
+            "description": "数据概览表的数据存储方式列（索引10）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "10",
+            "target_column": "J",
+            "target_name": "数据存储方式",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的版本号列（索引11）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "11",
+            "target_column": "K",
+            "target_name": "版本号",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的数据库实例名称/文件路径列（索引12）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "12",
+            "target_column": "L",
+            "target_name": "数据库实例名",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "UTF8",
+            "target_column": "M",
+            "target_name": "字符集"
+          },
+          {
+            "description": "数据概览表的归属4A列（索引14）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "14",
+            "target_column": "N",
+            "target_name": "归属4A",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的负责人列（索引15）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "15",
+            "target_column": "O",
+            "target_name": "负责人",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的联系方式列（索引16）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "16",
+            "target_column": "P",
+            "target_name": "联系方式",
+            "transform": ""
+          },
+          {
+            "description": "数据概览表的存储数据量列（索引17）",
+            "remarks": "",
+            "source_type": "field_index_assets",
+            "source_value": "17",
+            "target_column": "Q",
+            "target_name": "存储数据量",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "1",
+            "target_column": "R",
+            "target_name": "资产归属"
+          },
+          {
+            "description": "数据概览表的备注列（索引19）",
+            "remarks": "从数据概览表获取备注信息",
+            "source_type": "field_index_assets",
+            "source_value": "19",
+            "target_column": "S",
+            "target_name": "备注",
+            "transform": ""
+          }
+        ],
+        "name": "数据库资产信息表",
+        "template_file": "Templates/业支上报/i_10600_10001_template.xlsx"
+      },
+      "i_10600_10002": {
+        "category": "业支上报",
+        "data_source": "merge_results",
+        "data_start_row": 2,
+        "filter_config": {
+          "enabled": false
+        },
+        "mapping_rules": [
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "数智化部",
+            "target_column": "A",
+            "target_name": "所属部门名称"
+          },
+          {
+            "description": "merge_results表字段（数据库索引）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "13",
+            "target_column": "B",
+            "target_name": "业务系统名称"
+          },
+          {
+            "description": "通过B列业务系统名称（映射后）VLOOKUP查询数据概览表所属系统类型（文字）",
+            "default": "未匹配到此数据",
+            "fallback_to_raw_lookup": true,
+            "lookup_field": "22",
+            "lookup_key": "13",
+            "mapping_config": "business_system_name_mapping",
+            "remarks": "依据B列业务系统名称（merge_results 业务系统名称列，索引13）先通过映射字典转换，再对数据概览表业务系统名称（索引4）进行VLOOKUP查询；若映射后未命中，则回退原始业务系统名称再查；两次都未命中时返回“未匹配到此数据”",
+            "source_type": "vlookup_assets_with_mapping",
+            "source_value": "",
+            "target_column": "C",
+            "target_name": "所属系统类型",
+            "transform": "",
+            "use_mapping": true
+          },
+          {
+            "description": "merge_results表Q列（源IP，索引17）",
+            "remarks": "合并结果表的Q列",
+            "source_type": "field_index_merge_results",
+            "source_value": "17",
+            "target_column": "D",
+            "target_name": "主机IP或IP段"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "数据库类结构化数据",
+            "target_column": "E",
+            "target_name": "数据类型"
+          },
+          {
+            "description": "merge_results表A列，取'/'前部分（索引1）",
+            "remarks": "合并结果的A列，去'/'前的数据",
+            "source_type": "field_index_merge_results",
+            "source_value": "1",
+            "target_column": "F",
+            "target_name": "数据库名/文件名",
+            "transform": "split_before_slash"
+          },
+          {
+            "description": "merge_results表B列（完整表名，索引2）",
+            "remarks": "合并结果的B列",
+            "source_type": "field_index_merge_results",
+            "source_value": "2",
+            "target_column": "G",
+            "target_name": "数据表名/文件名"
+          },
+          {
+            "description": "merge_results表D列（字段名称，索引4）",
+            "remarks": "合并结果的D列",
+            "source_type": "field_index_merge_results",
+            "source_value": "4",
+            "target_column": "H",
+            "target_name": "字段名称/文件类型"
+          },
+          {
+            "description": "merge_results表字段（数据库索引）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "9",
+            "target_column": "I",
+            "target_name": "数据分类"
+          },
+          {
+            "description": "merge_results表字段（数据库索引）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "10",
+            "target_column": "J",
+            "target_name": "数据分级"
+          },
+          {
+            "description": "合并结果表的H列（索引8）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "8",
+            "target_column": "K",
+            "target_name": "数据名称"
+          },
+          {
+            "description": "依据本表的K列'数据名称'的值，然后依据'数据分级标准样例'并填写，且1、2级数据不做处理（原封不动显示数据样例），3级数据脱敏（数据样例部分脱敏）、4级数据加密（AES加密显示）",
+            "name_column_index": "8",
+            "remarks": "根据数据名称从映射表中获取数据样例，并应用敏感数据脱敏/加密：1-2级不处理，3级脱敏，4级加密",
+            "source_type": "data_sample_mapper",
+            "target_column": "L",
+            "target_name": "数据样例"
+          },
+          {
+            "description": "条件计算：统计本表K列（数据名称）在总体数据中出现的次数",
+            "remarks": "根据K列的数据名称值，统计该数据名称在当前导出数据集中出现的总次数",
+            "source_type": "column_value_count",
+            "source_value": "8",
+            "target_column": "M",
+            "target_name": "数据条数"
+          },
+          {
+            "description": "置空",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "N",
+            "target_name": "数据大小"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "永久保存",
+            "target_column": "O",
+            "target_name": "保存期限"
+          },
+          {
+            "conditions": [
+              {
+                "match": "1",
+                "result": "未处理"
+              },
+              {
+                "match": "2",
+                "result": "未处理"
+              },
+              {
+                "match": "3",
+                "result": "数据脱敏处理"
+              },
+              {
+                "match": "4",
+                "result": "数据加密处理"
+              }
+            ],
+            "default": "未处理",
+            "description": "单字段条件_数据分级_存储状态判断",
+            "remarks": "单字段条件：判断J列（数据分级，索引10），含有1或2→未处理，含有3→数据脱敏处理，含有4→数据加密处理，默认：未处理",
+            "source_type": "conditional",
+            "source_value": "10",
+            "target_column": "P",
+            "target_name": "数据存储状态",
+            "logic_rule_id": "data_level_to_storage",
+            "logic_rule_name": "单字段_数据分级_存储状态",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 10,
+              "field_name": "字段数据分级"
+            }
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "不涉及对外提供",
+            "target_column": "Q",
+            "target_name": "数据对外提供情况"
+          },
+          {
+            "description": "fixed value",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "1\\u00012\\u00013\\u00014\\u00015\\u00017",
+            "target_column": "R",
+            "target_name": "处理方式"
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "数据留痕"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_留痕判断",
+            "remarks": "单字段条件：判断I列（数据分类，索引9），以A/B/C/D开头→数据留痕，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "S",
+            "target_name": "处理目的",
+            "logic_rule_id": "ad_class_purpose",
+            "logic_rule_name": "单字段_数据分类_处理目的",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_流转路径判断",
+            "remarks": "单字段条件：判断I列（数据分类，索引9），以A/B/C/D开头→不进行外部流转，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "T",
+            "target_name": "流转路径",
+            "logic_rule_id": "ad_class_path",
+            "logic_rule_name": "单字段_数据分类_流转路径",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_业务场景判断",
+            "remarks": "单字段条件：判断I列（数据分类，索引9），以A/B/C/D开头→业务数据安全管理，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "U",
+            "target_name": "业务场景",
+            "logic_rule_id": "ad_class_scenario",
+            "logic_rule_name": "单字段_数据分类_业务场景",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "default": "",
+            "description": "多字段条件组_保障措施_判断",
+            "group_logic": "OR",
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(1|2)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A管控"
+              },
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(3|4)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A金库管控"
+              }
+            ],
+            "remarks": "优化版：I列（索引10，数据分类）以A/B/C/D开头 AND J列（索引10，数据分级）为1/2级→4A管控，I列以A/B/C/D开头 AND J列为3/4级→4A金库管控，I列不以A/B/C/D开头→置空",
+            "source_type": "conditional_groups",
+            "target_column": "V",
+            "target_name": "保障措施",
+            "logic_rule_id": "guarantee_measures",
+            "logic_rule_name": "多字段_保障措施",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "description": "merge_results表字段（数据库索引）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "19",
+            "target_column": "W",
+            "target_name": "责任人"
+          },
+          {
+            "description": "merge_results表字段（数据库索引）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "20",
+            "target_column": "X",
+            "target_name": "联系电话"
+          },
+          {
+            "default": "生产运营中产生",
+            "description": "多字段条件组_数据来源_归类判断",
+            "remarks": "依据业务系统名称（merge_results真实索引13）和数据名称（merge_results真实索引8）进行条件组判断：业务系统名称包含CRM，且数据名称包含身份证或证件（任一即可）时，返回'用户提供'；其余情况返回'生产运营中产生'",
+            "source_type": "conditional_groups",
+            "target_column": "Y",
+            "target_name": "数据来源",
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "field_index": "13",
+                    "match": "CRM",
+                    "operator": "contains"
+                  },
+                  {
+                    "field_index": "8",
+                    "match": "身份证",
+                    "operator": "contains"
+                  }
+                ],
+                "result": "用户提供"
+              },
+              {
+                "conditions": [
+                  {
+                    "field_index": "13",
+                    "match": "CRM",
+                    "operator": "contains"
+                  },
+                  {
+                    "field_index": "8",
+                    "match": "证件",
+                    "operator": "contains"
+                  }
+                ],
+                "result": "用户提供"
+              }
+            ],
+            "group_logic": "OR",
+            "logic_rule_id": "data_source_judge_crm",
+            "logic_rule_name": "多字段_数据来源",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 13,
+              "field_name": "业务系统名称"
+            }
+          },
+          {
+            "description": "置空",
+            "remarks": "数据来源为其他时填写",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "Z",
+            "target_name": "数据来源其他项补充信息"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "物理机房",
+            "target_column": "AA",
+            "target_name": "存储位置"
+          },
+          {
+            "description": "置空",
+            "remarks": "存储位置为其他时填写",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "AB",
+            "target_name": "存储位置其他项补充信息"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "否",
+            "target_column": "AC",
+            "target_name": "资产归属"
+          }
+        ],
+        "name": "数据资产字段信息表",
+        "template_file": "Templates/业支上报/i_10600_10002_template.xlsx"
+      },
+      "i_10600_10004": {
+        "category": "业支上报",
+        "data_source": "assets",
+        "data_start_row": 5,
+        "mapping_rules": [
+          {
+            "target_column": "A",
+            "target_name": "序号",
+            "source_type": "sequence",
+            "description": "自动递增序号",
+            "remarks": "自动生成1~X"
+          },
+          {
+            "target_column": "B",
+            "target_name": "所属公司",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "湖北移动",
+            "remarks": "固定值：湖北移动"
+          },
+          {
+            "target_column": "C",
+            "target_name": "业支名称",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "数智化部",
+            "remarks": "固定值：数智化部"
+          },
+          {
+            "target_column": "D",
+            "target_name": "业务系统",
+            "source_type": "field_index_assets",
+            "description": "数据概览表业务系统列（索引4）",
+            "source_value": "4",
+            "remarks": "从数据概览表获取业务系统名称"
+          },
+          {
+            "target_column": "E",
+            "target_name": "数据资产名称",
+            "source_type": "field_index_assets",
+            "description": "数据概览表数据资产名称列（索引5）",
+            "source_value": "5",
+            "remarks": "从数据概览表获取数据资产名称"
+          },
+          {
+            "target_column": "F",
+            "target_name": "数据脱敏策略",
+            "source_type": "field_assets_dynamic",
+            "description": "根据D列和G列动态生成：业务系统_策略类型政策",
+            "source_value": "3",
+            "reference_column": "D",
+            "remarks": "格式：{D列值}_{G列值}政策，例如：OA系统_数据脱敏政策"
+          },
+          {
+            "target_column": "G",
+            "target_name": "策略类型",
+            "source_type": "multi_strategy_config",
+            "description": "为每条assets记录生成多条记录：数据脱敏、数据加密、数字水印（4A/CRM）",
+            "source_value": "",
+            "remarks": "每条assets记录生成2-3条记录，数字水印仅对包含4A或CRM的业务系统生成"
+          },
+          {
+            "target_column": "H",
+            "target_name": "策略内容",
+            "source_type": "strategy_content_mapping",
+            "description": "根据G列策略类型填写不同的策略内容",
+            "source_value": "",
+            "remarks": "数据脱敏、数据加密、数字水印各有不同的策略内容描述"
+          },
+          {
+            "target_column": "I",
+            "target_name": "生效时间",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "2026-01-01 23:10:30",
+            "remarks": "固定值：2026-01-01 23:10:30"
+          },
+          {
+            "target_column": "J",
+            "target_name": "失效时间",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "2026-12-31 23:10:30",
+            "remarks": "固定值：2026-12-31 23:10:30"
+          },
+          {
+            "target_column": "K",
+            "target_name": "下发责任人",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "陈香芸",
+            "remarks": "固定值：陈香芸"
+          },
+          {
+            "target_column": "L",
+            "target_name": "联系方式",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "15997809706",
+            "remarks": "固定值：15997809706"
+          },
+          {
+            "target_column": "M",
+            "target_name": "备注",
+            "source_type": "fixed",
+            "description": "固定值，不填写时为空",
+            "source_value": "",
+            "remarks": "不填则单元格为空，可手动输入内容"
+          }
+        ],
+        "name": "数据策略上报清单",
+        "template_file": "Templates/业支上报/i_10600_10004_template.xlsx",
+        "filter_config": {
+          "enabled": false
+        },
+        "special_logic": "multi_row_expansion",
+        "expansion_rules": {
+          "data_masking": {
+            "g_column": "数据脱敏",
+            "h_column": "对纳管业务场景下的身份证、用户姓名、手机号等进行脱敏，姓名中间一位用\"*\"替换；身份证号中出生年月日用*代替，最后一位用*代替；手机号中间四位用*号进行替代。"
+          },
+          "data_encryption": {
+            "g_column": "数据加密",
+            "h_column": "对纳管业务重要及核心数据及一般四级数据进行敏感数据加密，加密算法采用哈希或MD5进行敏感数据加密处理。"
+          },
+          "digital_watermark": {
+            "g_column": "数字水印",
+            "h_column": "对CRM系统所有受理菜单进行数字水印处理，包含工号、当前时间添加水印。",
+            "filter_condition": "业务系统包含4A或CRM"
+          }
+        }
+      }
+    },
+    "smc": {
+      "attachment_3": {
+        "category": "SMC上报",
+        "data_source": "merge_results",
+        "data_start_row": 4,
+        "filter_config": {
+          "enabled": false
+        },
+        "mapping_rules": [
+          {
+            "description": "自动生成序号",
+            "remarks": "从1递增",
+            "source_type": "sequence",
+            "target_column": "A",
+            "target_name": "序号"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：数智化部",
+            "source_type": "fixed",
+            "source_value": "数智化部",
+            "target_column": "B",
+            "target_name": "所属部门名称"
+          },
+          {
+            "default": "",
+            "description": "合并结果表数据源名称经资产名称映射后直接输出到C列，未命中时返回原始值",
+            "fallback_policy": "raw_value",
+            "mapping_config": "asset_name_mapping",
+            "remarks": "读取合并结果表数据源名称（索引12）的原始值，使用资产名称映射做公共配置转换，命中后直接将映射结果写入C列；未命中时返回原始值",
+            "source_type": "public_config_mapping",
+            "source_value": 12,
+            "target_column": "C",
+            "target_name": "业务系统名称"
+          },
+          {
+            "default": "未匹配到此数据",
+            "description": "通过合并结果表数据源名称映射到数据资产名称后，VLOOKUP查询数据概览表所属系统类型（代码）",
+            "fallback_to_raw_lookup": true,
+            "lookup_field": "21",
+            "lookup_field_index": "5",
+            "lookup_key": "12",
+            "mapping_config": "asset_name_mapping",
+            "remarks": "依据合并结果表数据源名称（索引12）先通过资产名称映射转换为数据概览表数据资产名称，再对assets表数据资产名称（索引5）进行VLOOKUP查询，返回所属系统类型（代码）（索引21）；若映射后未命中，则回退原始数据源名称再查；两次都未命中时返回“未匹配到此数据”",
+            "source_type": "vlookup_assets_with_mapping",
+            "source_value": "",
+            "target_column": "D",
+            "target_name": "所属系统类型",
+            "transform": "",
+            "use_mapping": true
+          },
+          {
+            "description": "merge_results表Q列（源IP，索引17）",
+            "remarks": "源IP",
+            "source_type": "field_index_merge_results",
+            "source_value": "17",
+            "target_column": "E",
+            "target_name": "数据库/主机IP或IP段",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：1",
+            "source_type": "fixed",
+            "source_value": "1",
+            "target_column": "F",
+            "target_name": "数据类型"
+          },
+          {
+            "description": "merge_results表A列，取'/'前部分（索引1）",
+            "remarks": "取'/'前内容",
+            "source_type": "field_index_merge_results",
+            "source_value": "1",
+            "target_column": "G",
+            "target_name": "数据库名/主机名",
+            "transform": "split_before_slash"
+          },
+          {
+            "description": "merge_results表B列（完整表名，索引2）",
+            "remarks": "完整表名",
+            "source_type": "field_index_merge_results",
+            "source_value": "2",
+            "target_column": "H",
+            "target_name": "数据表名/文件名",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表D列（字段名称，索引4）",
+            "remarks": "字段名称",
+            "source_type": "field_index_merge_results",
+            "source_value": "4",
+            "target_column": "I",
+            "target_name": "字段名称/文件类型",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表I列（数据分类，索引9）",
+            "remarks": "字段数据分类，样例为AX-X：XXXX",
+            "source_type": "field_index_merge_results",
+            "source_value": "9",
+            "target_column": "J",
+            "target_name": "数据分类",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表J列（数据分级，索引10）",
+            "remarks": "直接等于合并结果表J列",
+            "source_type": "field_index_merge_results",
+            "source_value": "10",
+            "target_column": "K",
+            "target_name": "数据分级",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表H列（数据名称，索引8）",
+            "remarks": "数据名称",
+            "source_type": "field_index_merge_results",
+            "source_value": "8",
+            "target_column": "L",
+            "target_name": "数据名称",
+            "transform": ""
+          },
+          {
+            "description": "根据数据名称从映射表中获取数据样例，并应用敏感数据脱敏/加密",
+            "name_column_index": "8",
+            "remarks": "依据L列数据名称的值，然后依据'数据分级标准样例'并填写，且1、2级数据不做处理，3级数据脱敏、4级数据加密",
+            "source_type": "data_sample_mapper",
+            "target_column": "M",
+            "target_name": "数据样例"
+          },
+          {
+            "description": "count of same data name in source column",
+            "remarks": "Count occurrences of current data name (column L) in full dataset",
+            "source_type": "column_value_count",
+            "source_value": "8",
+            "target_column": "N",
+            "target_name": "数据条数"
+          },
+          {
+            "description": "置空",
+            "remarks": "第三方填写，置空",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "O",
+            "target_name": "数据大小"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：永久保存",
+            "source_type": "fixed",
+            "source_value": "永久保存",
+            "target_column": "P",
+            "target_name": "保存期限"
+          },
+          {
+            "conditions": [
+              {
+                "match": "1",
+                "result": "未处理"
+              },
+              {
+                "match": "2",
+                "result": "未处理"
+              },
+              {
+                "match": "3",
+                "result": "数据脱敏处理"
+              },
+              {
+                "match": "4",
+                "result": "数据加密处理"
+              }
+            ],
+            "default": "未处理",
+            "description": "单字段条件_数据分级_存储状态判断",
+            "remarks": "根据K列判断：1/2级=未处理，3级=数据脱敏处理，4级=数据加密处理",
+            "source_type": "conditional",
+            "source_value": "10",
+            "target_column": "Q",
+            "target_name": "数据存储状态",
+            "logic_rule_id": "data_level_to_storage",
+            "logic_rule_name": "单字段_数据分级_存储状态",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 10,
+              "field_name": "字段数据分级"
+            }
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：不涉及对外提供",
+            "source_type": "fixed",
+            "source_value": "4",
+            "target_column": "R",
+            "target_name": "数据对外提供情况"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：1|2|3|4|7（数据生命周期环节）",
+            "source_type": "fixed",
+            "source_value": "1|2|3|4|7",
+            "target_column": "S",
+            "target_name": "处理方式"
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "数据留痕"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_留痕判断",
+            "remarks": "单字段条件：判断J列（数据分类，索引9），以A/B/C/D开头→数据留痕，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "T",
+            "target_name": "处理目的",
+            "logic_rule_id": "ad_class_purpose",
+            "logic_rule_name": "单字段_数据分类_处理目的",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_流转路径判断",
+            "remarks": "单字段条件：判断J列（数据分类，索引9），以A/B/C/D开头→不进行外部流转，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "U",
+            "target_name": "流转路径",
+            "logic_rule_id": "ad_class_path",
+            "logic_rule_name": "单字段_数据分类_流转路径",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_业务场景判断",
+            "remarks": "单字段条件：判断J列（数据分类，索引9），以A/B/C/D开头→业务数据安全管理，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "V",
+            "target_name": "业务场景",
+            "logic_rule_id": "ad_class_scenario",
+            "logic_rule_name": "单字段_数据分类_业务场景",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "default": "",
+            "description": "多字段条件组_保障措施_判断",
+            "group_logic": "OR",
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(1|2)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A管控"
+              },
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(3|4)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A金库管控"
+              }
+            ],
+            "remarks": "双字段条件组：J列（数据分类，索引9）以A/B/C/D开头且K列（数据分级，索引10）为1/2级→4A管控，为3/4级→4A金库管控，否则置空",
+            "source_type": "conditional_groups",
+            "target_column": "W",
+            "target_name": "保障措施",
+            "logic_rule_id": "guarantee_measures",
+            "logic_rule_name": "多字段_保障措施",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "description": "merge_results表S列（责任人，索引19）",
+            "remarks": "责任人姓名",
+            "source_type": "field_index_merge_results",
+            "source_value": "19",
+            "target_column": "X",
+            "target_name": "责任人",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表T列（联系电话，索引20）",
+            "remarks": "联系电话",
+            "source_type": "field_index_merge_results",
+            "source_value": "20",
+            "target_column": "Y",
+            "target_name": "联系电话",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：生产运营中产生",
+            "source_type": "fixed",
+            "source_value": "4",
+            "target_column": "Z",
+            "target_name": "数据来源"
+          },
+          {
+            "description": "选填",
+            "remarks": "数据来源为其他时填写",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "AA",
+            "target_name": "数据来源其他项补充信息"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：物理机房",
+            "source_type": "fixed",
+            "source_value": "3",
+            "target_column": "AB",
+            "target_name": "存储位置"
+          },
+          {
+            "description": "选填",
+            "remarks": "存储位置为其他时填写",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "AC",
+            "target_name": "存储位置其他项补充信息"
+          }
+        ],
+        "name": "数据资产清单",
+        "template_file": "Templates/SMC上报/附件三_数据资产清单_template.xlsx"
+      },
+      "attachment_5": {
+        "category": "SMC上报",
+        "data_source": "merge_results",
+        "data_start_row": 3,
+        "filter_config": {
+          "enabled": true,
+          "logic": "AND",
+          "conditions": [
+            {
+              "field_index": 10,
+              "field_name": "字段数据分级",
+              "operator": "contains_any",
+              "value": [
+                "3",
+                "4"
+              ]
+            }
+          ],
+          "description": "只导出字段数据分级包含任一\"3\" 或 \"4\"的数据"
+        },
+        "mapping_rules": [
+          {
+            "description": "自动生成序号",
+            "remarks": "从1递增",
+            "source_type": "sequence",
+            "target_column": "A",
+            "target_name": "序号"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：东方通",
+            "source_type": "fixed",
+            "source_value": "东方通",
+            "target_column": "B",
+            "target_name": "*归属4A"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：数智化部",
+            "source_type": "fixed",
+            "source_value": "数智化部",
+            "target_column": "C",
+            "target_name": "*部门"
+          },
+          {
+            "description": "合并结果表M列（业务系统名称）",
+            "remarks": "置空，0311修改",
+            "source_type": "field_index_merge_results",
+            "source_value": "12",
+            "target_column": "D",
+            "target_name": "*涉敏系统4A名称"
+          },
+          {
+            "description": "合并结果表M列（业务系统名称）",
+            "remarks": "从合并结果表M列（索引12）获取业务系统名称",
+            "source_type": "field_index_merge_results",
+            "source_value": "12",
+            "target_column": "E",
+            "target_name": "*涉敏系统数管平台名称"
+          },
+          {
+            "description": "固定值",
+            "remarks": "固定值：表",
+            "source_type": "fixed",
+            "source_value": "表",
+            "target_column": "F",
+            "target_name": "*后台敏感数据对象的类型"
+          },
+          {
+            "description": "合并结果表数据源IP列",
+            "remarks": "从合并结果表数据源IP列（索引17）获取主机IP",
+            "source_type": "field_index_merge_results",
+            "source_value": "17",
+            "target_column": "G",
+            "target_name": "*数管纳管主机/数据库IP"
+          },
+          {
+            "description": "根据业务系统名称查询数据概览表X列",
+            "remarks": "依据本表D列业务系统名称（merge_results M列，索引11），对assets表F列（索引5，数据资产名称）进行VLOOKUP查询，返回Y列（索引24，系统资源ID）的值",
+            "source_type": "vlookup_assets",
+            "source_value": "",
+            "target_column": "H",
+            "target_name": "系统资源ID（4A纳管资源ID）",
+            "lookup_key": "12",
+            "lookup_field": "24",
+            "default": "未匹配此数据"
+          },
+          {
+            "description": "合并结果表数据源IP列",
+            "remarks": "从合并结果表数据源IP列（索引16）获取主机IP",
+            "source_type": "vlookup_assets",
+            "target_column": "I",
+            "target_name": "系统资源IP（4A纳管资源IP）",
+            "lookup_key": "12",
+            "lookup_field": "7",
+            "default": ""
+          },
+          {
+            "description": "根据合并结果表M列关联数据概览表E列，返回AA列系统资源类型",
+            "lookup_field": "27",
+            "lookup_field_index": "5",
+            "lookup_key": "12",
+            "remarks": "依据merge_results表M列（索引12，业务系统名称/数据资产名称）作为查找键，在assets表E列（索引5，数据资产名称）匹配，返回assets表AA列（索引27，系统资源类型）填入本表J列",
+            "source_type": "vlookup_assets",
+            "target_column": "J",
+            "target_name": "*系统资源类型"
+          },
+          {
+            "description": "合并结果的A列，去\"/\"前的数据",
+            "remarks": "合并结果的A列，去\"/\"前的数据",
+            "source_type": "field_index_merge_results",
+            "source_value": "1",
+            "target_column": "K",
+            "target_name": "*数据库名/归属用户",
+            "transform": "split_before_slash"
+          },
+          {
+            "description": "合并结果表B列（数据表名/文件名）",
+            "remarks": "从合并结果表B列（索引2）获取数据表名/文件名",
+            "source_type": "field_index_merge_results",
+            "source_value": "2",
+            "target_column": "L",
+            "target_name": "*表名&文件目录名|文件名"
+          },
+          {
+            "description": "固定值（置空）",
+            "remarks": "置空",
+            "source_type": "field_index_merge_results",
+            "source_value": "3",
+            "target_column": "M",
+            "target_name": "*表名或文件的说明"
+          },
+          {
+            "description": "合并结果表数据类型列",
+            "remarks": "从合并结果表数据类型列（索引8）获取数据",
+            "source_type": "field_index_merge_results",
+            "source_value": "8",
+            "target_column": "N",
+            "target_name": "*分类对应的具体数据内容"
+          },
+          {
+            "description": "合并结果表字段数据分类列",
+            "remarks": "从合并结果表字段数据分类列（索引9）获取数据分类",
+            "source_type": "field_index_merge_results",
+            "source_value": "9",
+            "target_column": "O",
+            "target_name": "*敏感数据分类分级"
+          },
+          {
+            "description": "合并结果表字段数据分级列",
+            "remarks": "从合并结果表字段数据分级列（索引10）获取数据分级",
+            "source_type": "field_index_merge_results",
+            "source_value": "10",
+            "target_column": "P",
+            "target_name": "*敏感数据分级"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "Q",
+            "target_name": "*涉敏场景是否涉及批量下载"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "R",
+            "target_name": "*是否模糊化"
+          }
+        ],
+        "name": "涉敏资产梳理汇总表",
+        "template_file": "Templates/SMC上报/附件五_涉敏资产梳理汇总表_template.xlsx"
+      }
+    },
+    "xinan": {
+      "10001": {
+        "category": "信安上报",
+        "data_source": "merge_results",
+        "data_start_row": 5,
+        "filter_config": {
+          "enabled": false
+        },
+        "mapping_rules": [
+          {
+            "description": "自动生成序号",
+            "remarks": "",
+            "source_type": "sequence",
+            "target_column": "A",
+            "target_name": "序号"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "数智化部",
+            "target_column": "B",
+            "target_name": "所属部门名称"
+          },
+          {
+            "description": "merge_results表M列（业务系统名称，索引13）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "13",
+            "target_column": "C",
+            "target_name": "业务系统名称",
+            "transform": ""
+          },
+          {
+            "description": "lookup assets U code by business system",
+            "default": "未匹配到此数据",
+            "fallback_to_raw_lookup": true,
+            "lookup_field": "21",
+            "lookup_key": "13",
+            "mapping_config": "business_system_name_mapping",
+            "remarks": "依据本表C列业务系统名称（merge_results M列，索引13）先通过映射字典转换，再对数据概览表业务系统名称（索引4）进行VLOOKUP查询，返回所属系统类型-代码（U列，索引21）的值；若映射后未命中，则回退原始业务系统名称再查；两次都未命中时返回“未匹配到此数据”",
+            "source_type": "vlookup_assets_with_mapping",
+            "target_column": "D",
+            "target_name": "所属系统类型",
+            "use_mapping": true
+          },
+          {
+            "description": "merge_results表Q列（源IP，索引17）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "17",
+            "target_column": "E",
+            "target_name": "数据库/主机IP或IP段",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "1",
+            "target_column": "F",
+            "target_name": "数据类型"
+          },
+          {
+            "description": "merge_results表A列，取'/'前部分（索引1）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "1",
+            "target_column": "G",
+            "target_name": "数据库名/主机名",
+            "transform": "split_before_slash"
+          },
+          {
+            "description": "merge_results表B列（完整表名，索引2）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "2",
+            "target_column": "H",
+            "target_name": "数据表名/文件名",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表D列（字段名称，索引4）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "4",
+            "target_column": "I",
+            "target_name": "字段名称/文件类型",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表I列（数据分类，索引9）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "9",
+            "target_column": "J",
+            "target_name": "数据分类",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表J列（数据分级，索引10），将'一般级-第X小级'转换为'第X级'格式",
+            "remarks": "转换规则：'一般级-第X小级' → '第X级'",
+            "source_type": "field_index_merge_results",
+            "source_value": "10",
+            "target_column": "K",
+            "target_name": "数据分级",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表H列（数据名称，索引8）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "8",
+            "target_column": "L",
+            "target_name": "数据名称",
+            "transform": ""
+          },
+          {
+            "description": "根据数据名称从映射表中获取数据样例，并应用敏感数据脱敏/加密",
+            "name_column_index": "8",
+            "remarks": "数据样例映射：根据数据名称（真实索引8，对应merge_results“数据类型”）从\"数据分级标准样例\"获取样例（1-2级不处理、3级脱敏、4级加密）",
+            "source_type": "data_sample_mapper",
+            "target_column": "M",
+            "target_name": "数据样例"
+          },
+          {
+            "description": "条件计算：统计本表L列（数据名称）在总体数据中出现的次数",
+            "remarks": "根据L列的数据名称值，统计该数据名称在当前导出数据集中出现的总次数",
+            "source_type": "column_value_count",
+            "source_value": "8",
+            "target_column": "N",
+            "target_name": "数据条数",
+            "transform": ""
+          },
+          {
+            "description": "置空",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "O",
+            "target_name": "数据大小"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "永久保存",
+            "target_column": "P",
+            "target_name": "保存期限"
+          },
+          {
+            "conditions": [
+              {
+                "match": "1",
+                "result": "未处理"
+              },
+              {
+                "match": "2",
+                "result": "未处理"
+              },
+              {
+                "match": "3",
+                "result": "数据脱敏处理"
+              },
+              {
+                "match": "4",
+                "result": "数据加密处理"
+              }
+            ],
+            "default": "未处理",
+            "description": "单字段条件_数据分级_存储状态判断",
+            "remarks": "单字段条件：判断真实索引10（字段数据分级，对应导出K列），含有\"1\"或\"2\"→未处理，含有\"3\"→数据脱敏处理，含有\"4\"→数据加密处理，默认：未处理",
+            "source_value": "10",
+            "source_type": "conditional",
+            "target_column": "Q",
+            "target_name": "数据存储状态",
+            "logic_rule_id": "data_level_to_storage",
+            "logic_rule_name": "单字段_数据分级_存储状态",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 10,
+              "field_name": "字段数据分级"
+            }
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "4",
+            "target_column": "R",
+            "target_name": "数据对外提供情况"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "1\\u00012\\u00013\\u00014\\u00015\\u00017",
+            "target_column": "S",
+            "target_name": "处理方式"
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "数据留痕"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "数据留痕"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_留痕判断",
+            "remarks": "多字段条件：判断【J列数据分类】，以A/B/C/D开头→数据留痕，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "T",
+            "target_name": "处理目的",
+            "logic_rule_id": "ad_class_purpose",
+            "logic_rule_name": "单字段_数据分类_处理目的",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "不进行外部流转"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_流转路径判断",
+            "remarks": "多字段条件：判断【J列数据分类】，以A/B/C/D开头→不进行外部流转，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "U",
+            "target_name": "流转路径",
+            "logic_rule_id": "ad_class_path",
+            "logic_rule_name": "单字段_数据分类_流转路径",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "conditions": [
+              {
+                "match": "A",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "B",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "C",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              },
+              {
+                "match": "D",
+                "operator": "startswith",
+                "result": "业务数据安全管理"
+              }
+            ],
+            "default": "",
+            "description": "单字段条件_数据分类_业务场景判断",
+            "remarks": "多字段条件：判断【J列数据分类】，以A/B/C/D开头→业务数据安全管理，默认：置空",
+            "source_type": "conditional",
+            "source_value": "9",
+            "target_column": "V",
+            "target_name": "业务场景",
+            "logic_rule_id": "ad_class_scenario",
+            "logic_rule_name": "单字段_数据分类_业务场景",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "default": "",
+            "description": "多字段条件组_保障措施_判断",
+            "group_logic": "OR",
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(1|2)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A管控"
+              },
+              {
+                "conditions": [
+                  {
+                    "field_index": "9",
+                    "match": "^[ABCD]",
+                    "regex": true
+                  },
+                  {
+                    "field_index": "10",
+                    "match": "(3|4)",
+                    "regex": true
+                  }
+                ],
+                "result": "4A金库管控"
+              }
+            ],
+            "remarks": "双字段条件组：J列（索引10）含有A/B/C/D AND K列（索引10）为第1/第2级→4A管控，J列含有A/B/C/D AND K列为第3/第4级→4A金库管控，J列不含A/B/C/D→置空",
+            "source_type": "conditional_groups",
+            "target_column": "W",
+            "target_name": "保障措施",
+            "logic_rule_id": "guarantee_measures",
+            "logic_rule_name": "多字段_保障措施",
+            "source_field": {
+              "data_source": "merge_results",
+              "field_index": 9,
+              "field_name": "字段数据分类"
+            }
+          },
+          {
+            "description": "merge_results表S列（责任人，索引19）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "19",
+            "target_column": "X",
+            "target_name": "责任人",
+            "transform": ""
+          },
+          {
+            "description": "merge_results表T列（联系电话，索引20）",
+            "remarks": "",
+            "source_type": "field_index_merge_results",
+            "source_value": "20",
+            "target_column": "Y",
+            "target_name": "联系电话",
+            "transform": ""
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "4",
+            "target_column": "Z",
+            "target_name": "数据来源"
+          },
+          {
+            "description": "选填，当Z列数据来源为其他时填写",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "AA",
+            "target_name": "数据来源其他项补充信息"
+          },
+          {
+            "description": "固定值",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "3",
+            "target_column": "AB",
+            "target_name": "存储位置"
+          },
+          {
+            "description": "选填，当AB列存储位置为其他时填写",
+            "remarks": "",
+            "source_type": "fixed",
+            "source_value": "",
+            "target_column": "AC",
+            "target_name": "存储位置其他项补充信息"
+          }
+        ],
+        "name": "数据资产字段信息表",
+        "special_logic": "",
+        "template_file": "Templates/信安上报/i_10600_10001_template_00_002.xlsx"
+      },
+      "00000": {
+        "category": "信安上报",
+        "data_source": "assets",
+        "data_start_row": 5,
+        "status_conditions": {
+          "description": "状态关键词公共配置 - 用于数据筛选和K列状态判断",
+          "keywords": {
+            "新增": "已扫描",
+            "删除": "已下线"
+          },
+          "notes": "修改此配置会同步更新filter_config（数据筛选）和K列映射规则（状态显示）"
+        },
+        "filter_config": {
+          "enabled": true,
+          "logic": "OR",
+          "conditions": [
+            {
+              "field_index": 19,
+              "field_name": "备注",
+              "operator": "contains",
+              "value": "已扫描",
+              "notes": "引用status_conditions.keywords.新增"
+            },
+            {
+              "field_index": 19,
+              "field_name": "备注",
+              "operator": "contains",
+              "value": "已下线",
+              "notes": "引用status_conditions.keywords.删除"
+            }
+          ],
+          "description": "只导出备注包含\"已扫描\"或\"已下线\"的数据 - 筛选条件来自status_condition配置"
+        },
+        "mapping_rules": [
+          {
+            "target_column": "A",
+            "target_name": "序号",
+            "source_type": "sequence",
+            "description": "自动生成序号",
+            "remarks": ""
+          },
+          {
+            "target_column": "B",
+            "target_name": "业务系统名称",
+            "source_type": "field_index_assets",
+            "description": "数据概览表业务系统列（索引4）",
+            "source_value": "4",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "C",
+            "target_name": "业务系统定级备案名称",
+            "source_type": "field_index_assets",
+            "description": "数据概览表业务系统定级备案名称列（索引25）",
+            "source_value": "25",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "D",
+            "target_name": "归属域",
+            "source_type": "field_index_assets",
+            "description": "数据概览表归属域列（索引23）",
+            "source_value": "23",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "E",
+            "target_name": "所属部门名称",
+            "source_type": "fixed",
+            "description": "固定值",
+            "source_value": "数智化部",
+            "remarks": ""
+          },
+          {
+            "target_column": "F",
+            "target_name": "是否重要系统",
+            "source_type": "field_index_assets",
+            "description": "数据概览表是否重要系统列（索引26）",
+            "source_value": "26",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "G",
+            "target_name": "资源名称",
+            "source_type": "field_index_assets",
+            "description": "数据概览表业务系统列（索引4）",
+            "source_value": "4",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "H",
+            "target_name": "资源类型",
+            "source_type": "field_index_assets",
+            "description": "数据概览表资源类型列（索引20）",
+            "source_value": "20",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "I",
+            "target_name": "资源类型其他说明",
+            "source_type": "fixed",
+            "description": "留空",
+            "source_value": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "J",
+            "target_name": "资源IP",
+            "source_type": "field_index_assets",
+            "description": "数据概览表IP地址列（索引7）",
+            "source_value": "7",
+            "transform": "",
+            "remarks": ""
+          },
+          {
+            "target_column": "K",
+            "target_name": "状态",
+            "source_type": "conditional",
+            "source_value": "19",
+            "description": "单字段条件_备注状态_状态判断",
+            "conditions": [
+              {
+                "match": "已扫描",
+                "result": "新增",
+                "notes": "引用status_conditions.keywords.新增"
+              },
+              {
+                "match": "已下线",
+                "result": "删除",
+                "notes": "引用status_conditions.keywords.删除"
+              }
+            ],
+            "default": "新增",
+            "remarks": "单字段条件：判断【备注】，\"已扫描\"→新增，\"已下线\"→删除，默认：新增。配置来源：顶层status_conditions",
+            "logic_rule_id": "xinan_status_conditions",
+            "logic_rule_name": "单字段_备注状态_状态判断",
+            "source_field": {
+              "data_source": "assets",
+              "field_index": 19,
+              "field_name": "备注"
+            }
+          }
+        ],
+        "name": "数据资产汇总表",
+        "template_file": "Templates/信安上报/i_10600_00000_template_00_000.xlsx"
+      }
+    }
+  }
+}

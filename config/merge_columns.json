@@ -1,0 +1,227 @@
+{
+  "columns": [
+    {
+      "name": "实例名/数据库名(schema)",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "表名",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "表注释",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "字段名称",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "字段注释",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "核查状态",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "扫描数据类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "字段数据分类",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "字段数据分级",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "表数据分级",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据源名称",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务系统名称",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务部门",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "资源池",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "分发点（POD）",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据源IP",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "端口",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务系统负责人",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "业务系统负责人联系方式",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据存储方式",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据源类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "是否是集群",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据存储位置",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "hideId",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "hideTaskId",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "AI字段分类",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "AI数据类型",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据防护",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "重要数据",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "核心数据",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "表记录数",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "表空间大小",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据源版本",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据总量",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "保存期限",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据处理目的",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据处理所涉及的信息系统",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "数据对外提供情况",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "提供数据生命周期各环节安全措施配套情况",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "是否涉及访问或导出",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "访问或导出用途",
+      "visible": true,
+      "width": 120
+    },
+    {
+      "name": "样本",
+      "visible": true,
+      "width": 120
+    }
+  ],
+  "pageSize": 200,
+  "sourceFile": "合并结果表-0320.xlsx",
+  "headerHeight": 40,
+  "headerColor": "#009dff",
+  "actionColumn": {
+    "color": "#6c757d",
+    "width": 120
+  }
+}
