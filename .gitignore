@@ -8,13 +8,20 @@ venv/
 env/
 
 # Runtime data and generated files
-data/*.db
-data/import_progress.json
-temp_data_process/logs/
-uploaded_files/
-SGExportFiles/
-DataFiles/merge_results/
-DataFiles/
+data/*
+!data/.gitkeep
+
+temp_data_process/logs/*
+!temp_data_process/logs/.gitkeep
+
+uploaded_files/*
+!uploaded_files/.gitkeep
+
+SGExportFiles/*
+!SGExportFiles/.gitkeep
+
+DataFiles/*
+!DataFiles/.gitkeep
 
 # OS / IDE
 .DS_Store
