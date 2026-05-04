@@ -1,0 +1,122 @@
+数管上报系统部署说明
+
+一、准备内容
+
+开始前，先确认你已经拿到下面这些内容：
+
+1. 完整的项目目录。
+2. 项目目录中的 data、config、Templates 等子目录。
+
+二、推荐环境
+
+当前项目建议使用以下环境：
+
+1. Windows 10 或 Windows 11。
+2. Python 3.11。
+3. Edge 或 Chrome 浏览器。
+
+
+三、安装 Python
+
+1. 在电脑安装 Python 3.11。
+2. 安装时勾选 Add Python to PATH。
+3. 安装完成后，打开 PowerShell，执行：
+
+python --version
+
+如果能看到 Python 版本号，说明安装正常。
+
+四、创建虚拟环境
+
+在项目根目录打开 PowerShell，依次执行：
+
+py -3.11 -m venv .venv
+.venv\Scripts\Activate.ps1
+
+如果系统限制脚本执行，可以先执行：
+
+Set-ExecutionPolicy -Scope Process RemoteSigned
+
+然后重新执行激活命令。
+
+五、安装依赖
+
+虚拟环境激活后，在项目根目录执行：
+
+pip install -r requirements.txt
+
+当前 requirements.txt 已包含项目运行所需的核心依赖：
+
+1. flask
+2. flask-cors
+3. pandas
+4. openpyxl
+5. xlrd
+6. cryptography
+
+六、启动系统
+
+有两种启动方式。
+
+方式一：直接运行 Python
+
+在项目根目录执行：
+
+python core\app.py
+
+方式二：双击启动脚本
+
+直接双击：
+
+启动数管系统.bat
+
+当前默认启动地址为：
+
+http://127.0.0.1:8100
+
+七、首次启动检查
+
+服务启动后，优先检查下面几项：
+
+1. 浏览器能否打开 http://127.0.0.1:8100
+2. 首页是否正常显示
+3. 六个一级页面能否切换
+4. 文件管理页面能否看到模板文件
+5. 数据概览页面能否正常查询
+
+八、数据映射文件说明
+
+系统现在会按下面顺序寻找数据映射文件：
+
+1. 优先读取环境变量 DATA_MAPPER_FILE
+2. 如果没有设置，默认读取项目内文件：
+
+
+九、常见问题
+
+1. 提示 python 不是内部或外部命令
+原因通常是 Python 没有加入 PATH。
+处理方法是重新安装 Python，安装时勾选 Add Python to PATH。
+
+2. 提示缺少模块
+原因通常是还没有安装依赖，或者虚拟环境没有激活。
+处理方法是先激活 .venv，再执行 pip install -r requirements.txt。
+
+3. 浏览器打不开系统页面
+先确认终端里服务是否已经启动，再确认端口 8100 是否被其他程序占用。
+
+
+
+十、快速操作清单
+
+如果你只想快速启动，可以按下面步骤执行：
+
+1. 安装 Python 3.11，并加入 PATH
+2. 复制完整项目目录
+3. 打开 PowerShell，进入项目根目录
+4. 执行 py -3.11 -m venv .venv
+5. 执行 .venv\Scripts\Activate.ps1
+6. 执行 pip install -r requirements.txt
+7. 执行 python core\app.py
+8. 打开 http://127.0.0.1:8100
+

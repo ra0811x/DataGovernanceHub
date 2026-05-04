@@ -99,7 +99,7 @@ class Config:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Flask配置
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-change-me')
+    SECRET_KEY = 'dev-secret-key-please-change-in-production'
     MAX_CONTENT_LENGTH = 500 * 1024 * 1024  # 最大上传500MB
     HOST = os.environ.get('APP_HOST', '127.0.0.1').strip() or '127.0.0.1'
     PORT = _env_int('APP_PORT', 8100)
@@ -334,7 +334,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     # 生产环境应该从环境变量读取
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-change-me')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'production-secret-key'
 
 
 # ==================== 配置字典 ====================

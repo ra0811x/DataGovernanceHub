@@ -1,0 +1,26 @@
+{
+  "category": "SMC上报",
+  "category_code": "SMC",
+  "templates": [
+    {
+      "template_id": "attachment_3",
+      "template_name": "数据资产清单",
+      "filename": "附件三_数据资产清单_template.xlsx",
+      "version": "v1.0",
+      "implemented": true,
+      "description": "SMC数据资产清单，包含数据库资产的详细信息",
+      "data_source": "merge_results",
+      "last_updated": "2026-03-08"
+    },
+    {
+      "template_id": "attachment_5",
+      "template_name": "涉敏资产梳理汇总表",
+      "filename": "附件五_涉敏资产梳理汇总表_template.xlsx",
+      "version": "v1.0",
+      "implemented": false,
+      "description": "SMC涉敏资产梳理汇总表（待配置）",
+      "data_source": "merge_results",
+      "last_updated": "2026-03-08"
+    }
+  ]
+}
