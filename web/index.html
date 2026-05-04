@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数管数据上报终端系统</title>
+    <link rel="icon" type="image/png" href="/js/GuanAnLogo.png">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css?v=20260323_3">
+    <link rel="stylesheet" href="css/components.css?v=20260323_1">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/export-modal.css">
+    <link rel="stylesheet" href="css/data-process.css?v=20260323_1">
+
+    <!-- 三层架构配置系统 V3 -->
+    <script src="js/three-layer-architecture.js?v=5.5"></script>
+    <script src="js/services/dynamic-config-query.js?v=20260420_1"></script>
+
+    <!-- ==================== 三层架构 ==================== -->
+    <!-- 基础设施层 (Infrastructure Layer) -->
+    <script src="js/infrastructure/http/HttpClient.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/utils/import-flow-utils.js"></script>
+
+    <!-- 数据层 - API 客户端 (Data Layer - API Clients) -->
+    <script src="js/data/api/ApiClient.js"></script>
+    <script src="js/data/api/AssetsApi.js"></script>
+    <script src="js/data/api/MergeApi.js"></script>
+    <script src="js/data/api/ModesApi.js"></script>
+    <script src="js/data/api/ColumnsApi.js"></script>
+    <script src="js/data/api/LogsApi.js"></script>
+    <script src="js/data/api/FilesApi.js"></script>
+    <script src="js/data/api/DataProcessApi.js"></script>
+
+    <!-- 数据层 - 仓库 (Data Layer - Repositories) -->
+    <script src="js/data/repositories/AssetsRepository.js"></script>
+    <script src="js/data/repositories/MergeRepository.js"></script>
+    <script src="js/data/repositories/ModesRepository.js"></script>
+    <script src="js/data/repositories/ColumnsRepository.js"></script>
+
+    <!-- 业务逻辑层 (Domain/Business Logic Layer) -->
+    <script src="js/domain/services/AssetService.js"></script>
+    <script src="js/domain/services/MergeService.js"></script>
+    <script src="js/domain/services/ColumnService.js"></script>
+
+    <!-- 表示层 - 页面控制器 (Presentation Layer - Page Controllers) -->
+    <script src="js/presentation/pages/DevicePageController.js"></script>
+    <script src="js/presentation/pages/MergePageController.js"></script>
+
+    <!-- 兼容层 (Compatibility Layer) -->
+    <script src="js/compatibility/LegacyAdapter.js"></script>
+    <!-- 应用初始化 -->
+    <script src="js/app-init.js"></script>
+    <!-- ==================== 三层架构结束 ==================== -->
+
+    <!-- 核心服务模块 -->
+    <script src="js/modals/modal-base.js"></script>
+    <script src="js/modals/import-modal.js"></script>
+    <script src="js/modals/delete-confirm-modal.js"></script>
+    <script src="js/modals/mode-modals.js"></script>
+    <script src="js/services/dataService.js"></script>
+    <script src="js/services/mode-manager.js"></script>
+    <!-- 页面模块 (渐进式拆分) -->
+    <script src="js/pages/logs-page.js"></script>
+    <script src="js/pages/device-page.js"></script>
+    <script src="js/pages/merge-page.js"></script>
+    <script src="js/pages/file-page.js"></script>
+    <script src="js/pages/reporting-page.js?v=20260422_2"></script>
+    <!-- 数据处理页面 -->
+    <script src="js/pages/data-process-page.js?v=20260323_1"></script>
+</head>
+<body>
+    <!-- 左侧导航栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="js/GuanAnLogo.png" alt="观安Logo" class="sidebar-logo">
+            <h2>数管数据上报终端系统</h2>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-item active" onclick="switchPage('device', this)">
+                <span>数据概览</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('database', this)">
+                <span>合并结果</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('reporting', this)">
+                <span>填报数据</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('report', this)">
+                <span>文件管理</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('dataProcess', this)">
+                <span>数据处理</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('settings', this)">
+                <span>系统日志</span>
+            </div>
+        </div>
+        <div class="sidebar-author"></div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 数据概览页面 -->
+        <div class="page active" id="page-device">
+            <!-- 顶部导航 -->
+            <div class="top-nav top-nav--workspace">
+                <div class="page-title-group">
+                    <div class="page-eyebrow">Asset Workspace</div>
+                    <h1>数管数据库资产信息概览表</h1>
+                    <p class="page-subtitle">集中处理数据概览资产的检索、维护、导入、导出和列配置。</p>
+                </div>
+                <div class="page-hero-tag">数据概览</div>
+            </div>
+
+            <!-- 工具栏 -->
+            <div class="toolbar workspace-toolbar">
+                <div class="workspace-toolbar-main">
+                    <div class="workspace-toolbar-search">
+                        <div class="toolbar-panel">
+                            <div class="toolbar-label">快速搜索</div>
+                            <div class="search-box search-box--wide" style="display: inline-flex; align-items: stretch; width: min(430px, 100%); max-width: 100%;">
+                                <input type="text" id="searchInput" placeholder="按业务系统、资产名称、IP 等关键词搜索" style="flex: 1 1 auto; width: auto; min-width: 0; border-radius: 999px 0 0 999px; border-right: none;">
+                                <button class="btn" type="button" onclick="openAdvancedFilter('device')" style="flex: 0 0 auto; min-height: 42px; margin-left: 0; padding: 8px 16px; border-radius: 0 999px 999px 0; box-shadow: none; transform: none;">高级筛选</button>
+                            </div>
+                            <div id="deviceAdvancedFilterSummary" style="display: none; margin-top: 8px;"></div>
+                        </div>
+                    </div>
+                    <div class="workspace-toolbar-actions">
+                        <button class="btn" onclick="loadData()">&#8635; 刷新</button>
+                        <button class="btn" onclick="toggleColumnPanel()">&#9881; 列表设置</button>
+                        <button class="btn" type="button" onclick="downloadWorkspaceTemplate('device')">下载模板</button>
+                        <button class="btn btn-success" onclick="document.getElementById('importFileInput').click()">导入数据</button>
+                        <button class="btn btn-danger" onclick="showDeleteDataConfirm('device')" style="margin-left: 10px;">删除数据</button>
+                        <input type="file" id="importFileInput" accept=".xlsx,.xlsm,.xltx,.xltm" style="display:none" onchange="previewImport(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 列显示控制面板 -->
+            <div class="column-panel" id="columnPanel">
+                <div class="column-panel-header">
+                    <div class="column-panel-title">列表设置</div>
+                    <button class="btn btn-primary btn-sm" onclick="saveColumnSettings()">保存设置</button>
+                </div>
+
+                <!-- 模块1: 列显示控制 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">列显示控制</div>
+                    <div class="column-toggles" id="columnToggles"></div>
+                </div>
+
+                <!-- 模块2: 表格样式设置 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">表格样式设置</div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">每页显示:</label>
+                            <select id="pageSizePanelSelect" onchange="previewPageSize(this.value)" class="settings-select">
+                                <option value="20">20条</option>
+                                <option value="50">50条</option>
+                                <option value="100">100条</option>
+                                <option value="200">200条</option>
+                                <option value="500">500条</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">标题高度:</label>
+                            <input type="number" id="headerHeightInput" min="30" max="200" step="5" value="40" onchange="previewHeaderHeight(this.value)" class="settings-input">
+                            <span class="settings-unit">px</span>
+                        </div>
+                        <div class="settings-item">
+                            <label class="settings-label">标题颜色:</label>
+                            <input type="color" id="headerColorInput" value="#495057" onchange="previewHeaderColor(this.value)" class="settings-color">
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">操作列宽度:</label>
+                            <input type="number" id="actionWidthInput" min="80" max="300" step="10" value="120" onchange="previewActionWidth(this.value)" class="settings-input">
+                            <span class="settings-unit">px</span>
+                        </div>
+                        <div class="settings-item">
+                            <label class="settings-label">操作列颜色:</label>
+                            <input type="color" id="actionColorInput" value="#495057" onchange="previewActionColor(this.value)" class="settings-color">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 模块3: 列管理 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">列管理</div>
+                    <div class="settings-row">
+                        <div class="settings-item-full">
+                            <div class="add-column-input" style="display: flex; gap: 10px;">
+                                <input type="text" id="newColumnName" placeholder="输入新列名称..." class="new-column-input">
+                                <button class="btn btn-success btn-sm" onclick="addNewColumn()">+ 添加列</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-workspace">
+                <div class="table-shell">
+                    <div class="table-shell-head">
+                        <div>
+                            <div class="table-shell-title">资产列表</div>
+                            <div class="table-shell-meta">支持搜索、分页、列设置和行级编辑操作。</div>
+                        </div>
+                        <div class="table-shell-badge">主数据表</div>
+                    </div>
+
+                    <div class="workspace-empty-state" id="deviceEmptyState" hidden>
+                        <div class="workspace-empty-state__title" id="deviceEmptyStateTitle">当前还没有导入任何资产数据</div>
+                        <div class="workspace-empty-state__desc" id="deviceEmptyStateDesc">请使用上方工具栏中的“导入数据”导入数据，页面会在导入完成后显示列表内容。</div>
+                        <div class="workspace-empty-state__actions">
+                            <button class="btn" type="button" id="deviceEmptyStateAuxBtn" hidden>重新加载</button>
+                        </div>
+                    </div>
+
+                    <!-- 表格 -->
+                    <div class="table-container" id="deviceTableContainer">
+                        <table id="dataTable">
+                            <thead><tr id="tableHeader"></tr></thead>
+                            <tbody id="tableBody"><tr><td colspan="22" class="loading">加载中...</td></tr></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 分页 -->
+                    <div class="pagination" id="devicePagination">
+                        <div id="paginationInfo"></div>
+                        <div class="pagination-controls">
+                            <button id="prevBtn">上一页</button>
+                            <button id="nextBtn">下一页</button>
+                            <input type="number" id="jumpPageInput" min="1" style="width: 60px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;" placeholder="页码">
+                            <button id="jumpPageBtn" class="btn">跳转</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 合并结果上报页面 -->
+        <div class="page" id="page-database">
+            <!-- 顶部导航 -->
+            <div class="top-nav top-nav--workspace top-nav--merge">
+                <div class="page-title-group">
+                    <div class="page-eyebrow">Merge Workspace</div>
+                    <h1>合并结果上报</h1>
+                    <p class="page-subtitle">聚焦合并结果数据的高容量浏览、复核、导出和导入更新。</p>
+                </div>
+                <div class="page-hero-tag page-hero-tag--merge">合并结果</div>
+            </div>
+
+            <!-- 工具栏 -->
+            <div class="toolbar workspace-toolbar">
+                <div class="workspace-toolbar-main">
+                    <div class="workspace-toolbar-search">
+                        <div class="toolbar-panel">
+                            <div class="toolbar-label">快速搜索</div>
+                            <div class="search-box search-box--wide" style="display: inline-flex; align-items: stretch; width: min(430px, 100%); max-width: 100%;">
+                                <input type="text" id="searchInput2" placeholder="按系统、字段、分类或来源信息搜索" style="flex: 1 1 auto; width: auto; min-width: 0; border-radius: 999px 0 0 999px; border-right: none;">
+                                <button class="btn" type="button" onclick="openAdvancedFilter('merge')" style="flex: 0 0 auto; min-height: 42px; margin-left: 0; padding: 8px 16px; border-radius: 0 999px 999px 0; box-shadow: none; transform: none;">高级筛选</button>
+                            </div>
+                            <div id="mergeAdvancedFilterSummary" style="display: none; margin-top: 8px;"></div>
+                        </div>
+                    </div>
+                    <div class="workspace-toolbar-actions">
+                        <button class="btn" onclick="loadMergeData()">&#8635; 刷新</button>
+                        <button class="btn" onclick="toggleColumnPanel2()">&#9881; 列表设置</button>
+                        <button class="btn" type="button" onclick="downloadWorkspaceTemplate('merge')">下载模板</button>
+                        <button class="btn btn-success" onclick="openMergeImportModeSelector()">导入数据</button>
+                        <button class="btn" type="button" onclick="openMergeToolboxModal()">工具箱</button>
+                        <button class="btn btn-danger" onclick="showDeleteDataConfirm('merge')" style="margin-left: 10px;">删除数据</button>
+                        <input type="file" id="importFileInput2" accept=".xlsx,.xlsm,.xltx,.xltm" style="display:none" onchange="previewImport2(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 列显示控制面板 -->
+            <div class="column-panel" id="columnPanel2">
+                <div class="column-panel-header">
+                    <div class="column-panel-title">列表设置</div>
+                    <button class="btn btn-primary btn-sm" onclick="saveColumnSettings2()">保存设置</button>
+                </div>
+
+                <!-- 模块1: 列显示控制 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">列显示控制</div>
+                    <div class="column-toggles" id="columnToggles2"></div>
+                </div>
+
+                <!-- 模块2: 表格样式设置 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">表格样式设置</div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">每页显示:</label>
+                            <select id="pageSizePanelSelect2" onchange="previewPageSize2(this.value)" class="settings-select">
+                                <option value="20">20条</option>
+                                <option value="50">50条</option>
+                                <option value="100">100条</option>
+                                <option value="200">200条</option>
+                                <option value="500">500条</option>
+                                <option value="1000">1000条</option>
+                                <option value="5000">5000条</option>
+                                <option value="-1">全部显示</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">标题高度:</label>
+                            <input type="number" id="headerHeightInput2" min="30" max="200" step="5" value="40" onchange="previewHeaderHeight2(this.value)" class="settings-input">
+                            <span class="settings-unit">px</span>
+                        </div>
+                        <div class="settings-item">
+                            <label class="settings-label">标题颜色:</label>
+                            <input type="color" id="headerColorInput2" value="#6c757d" onchange="previewHeaderColor2(this.value)" class="settings-color">
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-item">
+                            <label class="settings-label">操作列宽度:</label>
+                            <input type="number" id="actionWidthInput2" min="80" max="300" step="10" value="120" onchange="previewActionWidth2(this.value)" class="settings-input">
+                            <span class="settings-unit">px</span>
+                        </div>
+                        <div class="settings-item">
+                            <label class="settings-label">操作列颜色:</label>
+                            <input type="color" id="actionColorInput2" value="#6c757d" onchange="previewActionColor2(this.value)" class="settings-color">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 模块3: 列管理 -->
+                <div class="settings-section">
+                    <div class="settings-section-title">列管理</div>
+                    <div class="settings-row">
+                        <div class="settings-item-full">
+                            <div class="add-column-input" style="display: flex; gap: 10px;">
+                                <input type="text" id="newColumnName2" placeholder="输入新列名称..." class="new-column-input">
+                                <button class="btn btn-success btn-sm" onclick="addNewColumn2()">+ 添加列</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-workspace">
+                <div class="table-shell">
+                    <div class="table-shell-head">
+                        <div>
+                            <div class="table-shell-title">合并结果列表</div>
+                            <div class="table-shell-meta">面向高频核对、导出前检查和批量处理结果回看。</div>
+                        </div>
+                        <div style="display: grid; gap: 8px; justify-items: end;">
+                            <div id="mergeFineScopeStatusCard" style="min-width: 300px; max-width: 420px; padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(18, 92, 196, 0.14); background: linear-gradient(180deg, rgba(246, 250, 255, 0.98) 0%, rgba(239, 246, 255, 0.96) 100%); color: #355070; font-size: 9.6px; line-height: 1.28;">
+                                正在加载精细化筛减状态...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workspace-empty-state" id="mergeEmptyState" hidden>
+                        <div class="workspace-empty-state__title" id="mergeEmptyStateTitle">当前还没有导入任何合并结果</div>
+                        <div class="workspace-empty-state__desc" id="mergeEmptyStateDesc">请使用上方工具栏中的“导入数据”导入结果表，或先从数据处理页生成并整理结果后再导入。</div>
+                        <div class="workspace-empty-state__actions">
+                            <button class="btn" type="button" id="mergeEmptyStateAuxBtn" hidden>重新加载</button>
+                        </div>
+                    </div>
+
+                    <!-- 表格 -->
+                    <div class="table-container" id="mergeTableContainer">
+                        <table id="dataTable2">
+                            <thead><tr id="tableHeader2"></tr></thead>
+                            <tbody id="tableBody2"><tr><td colspan="22" class="loading">加载中...</td></tr></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 分页 -->
+                    <div class="pagination" id="mergePagination">
+                        <div id="paginationInfo2"></div>
+                        <div class="pagination-controls">
+                            <button id="prevBtn2">上一页</button>
+                            <button id="nextBtn2">下一页</button>
+                            <input type="number" id="jumpPageInput2" min="1" style="width: 60px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;" placeholder="页码">
+                            <button id="jumpPageBtn2" class="btn">跳转</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 填报数据页面 -->
+        <div class="page" id="page-reporting">
+            <div class="page-reporting-header">
+                <div class="page-reporting-hero">
+                    <div class="top-nav top-nav--reporting-workspace">
+                        <div class="top-nav__content">
+                            <div class="page-reporting-kicker">Reporting Workspace</div>
+                            <h1>填报数据管理</h1>
+                            <p class="page-reporting-subtitle">选择报表类型生成并导出各类上报数据，同时维护映射配置和条件规则。</p>
+                        </div>
+                        <div class="page-reporting-badge">报表工作台</div>
+                    </div>
+
+                    <div class="page-reporting-tabs">
+                        <div class="page-reporting-tabs__nav">
+                            <button class="tab-button active" onclick="switchReportingTab('reports', this)">报表导出</button>
+                            <button class="tab-button" onclick="switchReportingTab('mapping', this)">映射管理</button>
+                            <button class="tab-button" onclick="switchReportingTab('logic-rules', this)">条件规则管理</button>
+                        </div>
+                        <div id="addReportButtonContainer" class="page-reporting-action-slot">
+                            <button class="page-reporting-action" onclick="openReportSettingsModal()">报表设置</button>
+                            <button class="page-reporting-action page-reporting-action--accent" onclick="showAddReportModal()">+ 新增报表</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-reporting-body">
+                <!-- 报表导出区域 -->
+                <div id="reporting-tab-reports" class="reporting-tab-panel reporting-tab-panel--reports">
+                    <div class="reporting-shell reporting-shell--reports">
+                        <div class="reporting-sidebar reporting-sidebar--reports">
+                            <div class="reporting-sidebar-card">
+                                <div class="reporting-sidebar-intro">
+                                    <div class="reporting-sidebar__eyebrow">分类导航</div>
+                                    <div class="reporting-sidebar__title">按报送体系切换</div>
+                                    <p>左侧切换报送分类，右侧查看报表卡片和导出入口，后端逻辑保持原样。</p>
+                                </div>
+                                <div class="reporting-category-stack">
+                                    <button id="reportCategory-yeji" class="category-tab active reporting-category-button" data-category="yeji" onclick="switchReportCategory('yeji', this)">
+                                        <span class="reporting-nav-title">业支上报</span>
+                                        <span class="reporting-nav-meta">数据库资产与字段资产报表</span>
+                                    </button>
+                                    <button id="reportCategory-smc" class="category-tab reporting-category-button" data-category="smc" onclick="switchReportCategory('smc', this)">
+                                        <span class="reporting-nav-title">SMC上报</span>
+                                        <span class="reporting-nav-meta">涉敏资产与数据清单报表</span>
+                                    </button>
+                                    <button id="reportCategory-xinan" class="category-tab reporting-category-button" data-category="xinan" onclick="switchReportCategory('xinan', this)">
+                                        <span class="reporting-nav-title">信安上报</span>
+                                        <span class="reporting-nav-meta">安全管理与汇总报表</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reporting-main-column">
+                            <div class="reporting-overview-card reporting-overview-card--reports">
+                                <div class="reporting-overview-card__main">
+                                    <div class="reporting-overview-card__eyebrow">当前类别</div>
+                                    <h2 id="reportingCurrentCategoryTitle">业支上报</h2>
+                                    <p id="reportingCurrentCategoryDescription">生成业支域相关的数据资产报表。</p>
+                                </div>
+                                <div class="reporting-overview-card__stats">
+                                    <div class="reporting-overview-pill">
+                                        <span class="reporting-overview-pill__label">报表数量</span>
+                                        <strong id="reportingCurrentCategoryCount">3 个报表</strong>
+                                    </div>
+                                    <div class="reporting-overview-pill">
+                                        <span class="reporting-overview-pill__label">数据来源</span>
+                                        <strong id="reportingCurrentCategorySource">数据概览</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reporting-content-card reporting-content-card--reports">
+                                <div class="reporting-content-card__head">
+                                    <div class="reporting-content-card__copy">
+                                        <div class="reporting-content-card__eyebrow">导出列表</div>
+                                        <h3>报表卡片</h3>
+                                        <p>沿用文件管理页的卡片工作台风格，保留现有导出按钮和详情入口。</p>
+                                    </div>
+                                </div>
+                                <div id="reportsContainer" class="reporting-main-panel reporting-reports-container">
+                                    <!-- 报表卡片将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- 映射管理区域 -->
+            <div id="reporting-tab-mapping" class="reporting-tab-panel reporting-tab-panel--mapping" style="display: none;">
+                <div class="reporting-shell reporting-shell--mapping">
+                    <div class="reporting-sidebar reporting-sidebar--mapping">
+                        <div class="reporting-sidebar-card reporting-sidebar-card--mapping">
+                            <div class="reporting-sidebar-intro">
+                                <div class="reporting-sidebar__eyebrow">配置目录</div>
+                                <div class="reporting-sidebar__title">按分类进入映射</div>
+                                <p>先展开分类，再选择具体报表进入映射编辑器。页面只重做视觉，不改变映射接口。</p>
+                            </div>
+                            <div class="mapping-directory">
+                                <div class="mapping-directory-group" style="display: none;">
+                                    <button id="mappingCategory-public" class="mapping-category-button" data-category="public" onclick="toggleMappingCategory('public')">
+                                        <span class="reporting-nav-title">公共配置</span>
+                                        <span class="reporting-nav-meta">基础字典与公共规则</span>
+                                    </button>
+                                    <div id="mappingReports-public" class="mapping-report-list" style="display: none;">
+                                        <!-- 公共配置列表将由JavaScript生成 -->
+                                    </div>
+                                </div>
+
+                                <div class="mapping-directory-group">
+                                    <button id="mappingCategory-yeji" class="mapping-category-button" data-category="yeji" onclick="toggleMappingCategory('yeji')">
+                                        <span class="reporting-nav-title">业支上报</span>
+                                        <span class="reporting-nav-meta">业务资产映射</span>
+                                    </button>
+                                    <div id="mappingReports-yeji" class="mapping-report-list" style="display: none;">
+                                        <!-- 业支报表列表将由JavaScript生成 -->
+                                    </div>
+                                </div>
+
+                                <div class="mapping-directory-group">
+                                    <button id="mappingCategory-smc" class="mapping-category-button" data-category="smc" onclick="toggleMappingCategory('smc')">
+                                        <span class="reporting-nav-title">SMC上报</span>
+                                        <span class="reporting-nav-meta">涉敏资产映射</span>
+                                    </button>
+                                    <div id="mappingReports-smc" class="mapping-report-list" style="display: none;">
+                                        <!-- SMC报表列表将由JavaScript生成 -->
+                                    </div>
+                                </div>
+
+                                <div class="mapping-directory-group">
+                                    <button id="mappingCategory-xinan" class="mapping-category-button" data-category="xinan" onclick="toggleMappingCategory('xinan')">
+                                        <span class="reporting-nav-title">信安上报</span>
+                                        <span class="reporting-nav-meta">安全数据映射</span>
+                                    </button>
+                                    <div id="mappingReports-xinan" class="mapping-report-list" style="display: none;">
+                                        <!-- 信安报表列表将由JavaScript生成 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reporting-help-section">
+                                <button class="page-reporting-action page-reporting-action--ghost reporting-help-button" onclick="showMappingHelp()">使用参考</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reporting-main-column">
+                        <div class="reporting-overview-card reporting-overview-card--mapping">
+                            <div class="reporting-overview-card__main">
+                                <div class="reporting-overview-card__eyebrow">当前工作区</div>
+                                <h2 id="mappingWorkspaceTitle">映射管理</h2>
+                                <p id="mappingWorkspaceDescription">请先从左侧展开分类，再选择具体报表查看映射配置。这里的保存会直接影响报表导出。</p>
+                            </div>
+                            <div class="reporting-overview-card__stats">
+                                <div class="reporting-overview-pill">
+                                    <span class="reporting-overview-pill__label">支持分类</span>
+                                    <strong>业支 / SMC / 信安</strong>
+                                </div>
+                                <div class="reporting-overview-pill">
+                                    <span class="reporting-overview-pill__label">当前提示</span>
+                                    <strong id="mappingWorkspaceHint">等待选择报表</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reporting-content-card reporting-content-card--mapping">
+                            <div class="reporting-content-card__head">
+                                <div class="reporting-content-card__copy">
+                                    <div class="reporting-content-card__eyebrow">映射编辑器</div>
+                                    <h3>配置详情</h3>
+                                    <p>右侧继续维护运行态映射配置，保存后会直接影响对应报表的导出结果。</p>
+                                </div>
+                            </div>
+                            <div id="mappingConfigContent" class="mapping-config-shell">
+                                <div class="mapping-empty-state mapping-empty-state--center">
+                                    <span class="mapping-empty-state__badge">映射配置</span>
+                                    <div class="mapping-empty-state__title">请从左侧选择分类，然后选择报表查看映射配置</div>
+                                    <div class="mapping-empty-state__desc">支持业支、SMC、信安三类报表的运行态映射规则维护，保存后直接影响导出。</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 条件规则管理区域 -->
+            <div id="reporting-tab-logic-rules" class="reporting-tab-panel reporting-tab-panel--logic" style="display: none;">
+                <div class="reporting-shell reporting-shell--logic">
+                    <div class="reporting-sidebar reporting-sidebar--logic">
+                        <div class="reporting-sidebar-card reporting-sidebar-card--logic">
+                            <div class="reporting-sidebar-intro" id="logicSidebarIntro">
+                                <div class="reporting-sidebar__eyebrow" id="logicSidebarEyebrow">规则导航</div>
+                                <div class="reporting-sidebar__title" id="logicSidebarTitle">切换规则工作区</div>
+                                <p id="logicSidebarDescription">映射管理中的生效配置会直接影响导出；这里的条件规则库仅作为规则储备，需应用后才生效。</p>
+                            </div>
+                            <div class="reporting-logic-nav" id="logicDefaultNav">
+                                <button class="logic-tab-button active" onclick="switchLogicTab('rules', this)">
+                                    <span class="reporting-nav-title">条件规则库</span>
+                                    <span class="reporting-nav-meta">模板与自定义规则</span>
+                                </button>
+                                <button class="logic-tab-button" onclick="switchLogicTab('sample-standards', this)">
+                                    <span class="reporting-nav-title">数据分级标准样例</span>
+                                    <span class="reporting-nav-meta">标准样例与填充依据</span>
+                                </button>
+                                <button id="logicPublicConfigNavButton" class="logic-tab-button" onclick="switchLogicTab('business-system-mapping', this)">
+                                    <span class="reporting-nav-title">公共配置</span>
+                                    <span class="reporting-nav-meta">跨表名称对齐规则</span>
+                                </button>
+                                <div id="logicPublicConfigNavSection" style="display: none;">
+                                    <div id="publicConfigCenterList" class="mapping-report-list" style="display: flex; margin-top: 8px;">
+                                        <div class="mapping-empty-state" style="padding: 24px 16px;">
+                                            <span class="mapping-empty-state__badge">加载中</span>
+                                            <div class="mapping-empty-state__title" style="font-size: 14px;">正在读取公共配置列表</div>
+                                            <div class="mapping-empty-state__desc">请稍候...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reporting-main-column">
+                        <div class="reporting-overview-card reporting-overview-card--logic">
+                            <div class="reporting-overview-card__main">
+                                <div class="reporting-overview-card__eyebrow">当前工作区</div>
+                                <h2 id="logicWorkspaceTitle">条件规则库</h2>
+                                <p id="logicWorkspaceDescription">条件规则库仅作储备；数据分级标准样例和已接线公共配置属于生效层，会直接影响导出。</p>
+                            </div>
+                            <div class="reporting-overview-card__stats">
+                                <div class="reporting-overview-pill">
+                                    <span class="reporting-overview-pill__label">工作台</span>
+                                    <strong>规则 / 样例 / 字典</strong>
+                                </div>
+                                <div class="reporting-overview-pill">
+                                    <span class="reporting-overview-pill__label">当前焦点</span>
+                                    <strong id="logicWorkspaceHint">模板与自定义规则</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reporting-content-card reporting-content-card--logic">
+                            <div class="reporting-content-card__head">
+                                <div class="reporting-content-card__copy">
+                                    <div class="reporting-content-card__eyebrow">规则工作台</div>
+                                    <h3 id="logicContentTitle">规则与字典</h3>
+                                    <p id="logicContentDescription">条件规则需先应用到映射管理后才会生效；样例标准和已接线公共配置保存后会直接影响导出。</p>
+                                </div>
+                                <div id="logicContentWorkspaceActions" class="logic-toolbar-actions" style="display: none;">
+                                    <button class="page-reporting-action page-reporting-action--accent" type="button" onclick="openPublicConfigTypeManager('create')">新增类型</button>
+                                    <button class="page-reporting-action page-reporting-action--ghost" type="button" onclick="openCurrentPublicConfigTypeManager()">编辑当前</button>
+                                </div>
+                            </div>
+
+                            <div class="reporting-logic-panel">
+                                <div id="logic-tab-content-rules" class="reporting-logic-tab-panel">
+                                    <div class="logic-hero-card">
+                                        <div class="logic-hero-card__toggle" onclick="toggleRuleTemplatesPanel()">
+                                            <div class="logic-hero-card__intro">
+                                                <div class="logic-hero-card__badge">快速开始</div>
+                                                <div class="logic-hero-card__title-wrap">
+                                                    <div class="logic-hero-card__title">规则模板库</div>
+                                                    <div class="logic-hero-card__desc">15种开箱即用的规则模板，点击即可创建。</div>
+                                                </div>
+                                            </div>
+                                            <div id="ruleTemplatesPanelArrow" class="logic-hero-card__arrow">▼</div>
+                                        </div>
+                                        <div id="ruleTemplatesPanelContent" class="logic-hero-card__content" style="display: none;">
+                                            <div id="ruleTemplatesList" class="logic-templates-grid">
+                                                <!-- 规则模板列表将由JavaScript动态生成 -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="logic-toolbar-card">
+                                        <div class="logic-toolbar-card__head">
+                                            <div class="logic-toolbar-card__copy">
+                                                <h3>我的规则</h3>
+                                                <p>管理条件规则模板和储备规则。仅保存到规则库，不会直接影响导出。</p>
+                                            </div>
+                                            <div class="logic-toolbar-actions">
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="applyAllLogicRulesToReports()">应用</button>
+                                                <button class="page-reporting-action page-reporting-action--accent" onclick="showLogicRuleEditor()">+ 新建规则</button>
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="importLogicRules()">导入</button>
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="exportLogicRules()">导出</button>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="logicRulesImportInput" accept=".json,application/json" style="display: none;" onchange="handleLogicRulesImport(this)">
+                                    </div>
+
+                                    <div id="logicRulesList" class="logic-rules-list">
+                                        <!-- 规则列表将由JavaScript动态生成 -->
+                                    </div>
+                                </div>
+
+                                <div id="logic-tab-content-sample-standards" class="reporting-logic-tab-panel" style="display: none;">
+                                    <div class="logic-toolbar-card">
+                                        <div class="logic-toolbar-card__head">
+                                            <div class="logic-toolbar-card__copy">
+                                                <h3>数据分级标准样例</h3>
+                                                <p>管理数据样例映射标准。保存后会直接影响使用 data_sample_mapper 的报表导出。</p>
+                                            </div>
+                                            <div class="logic-toolbar-actions">
+                                                <button class="page-reporting-action page-reporting-action--accent" onclick="showSampleStandardEditor()">+ 新增标准</button>
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="downloadImportTemplate()">下载模板</button>
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="importSampleStandards()">导入</button>
+                                                <button class="page-reporting-action page-reporting-action--ghost" onclick="exportSampleStandards()">导出</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="logic-filter-card">
+                                        <div class="logic-filter-bar">
+                                            <div class="logic-filter-group">
+                                                <label class="logic-filter-label">搜索</label>
+                                                <input type="text" id="sampleStandardSearch" class="logic-filter-input logic-filter-input--wide" placeholder="搜索数据名称..." oninput="filterSampleStandards()">
+                                            </div>
+                                            <div class="logic-filter-group">
+                                                <label class="logic-filter-label">数据分级</label>
+                                                <select id="sampleStandardLevelFilter" class="logic-filter-input" onchange="filterSampleStandards()">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                            <div class="logic-filter-group">
+                                                <label class="logic-filter-label">状态</label>
+                                                <select id="sampleStandardStatusFilter" class="logic-filter-input" onchange="filterSampleStandards()">
+                                                    <option value="">全部</option>
+                                                    <option value="enabled">启用</option>
+                                                    <option value="disabled">禁用</option>
+                                                </select>
+                                            </div>
+                                            <div class="logic-counter">
+                                                共 <span id="sampleStandardCount">0</span> 条标准
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="sampleStandardsList" class="logic-card-grid">
+                                        <!-- 标准卡片将由JavaScript动态生成 -->
+                                    </div>
+                                </div>
+
+                                <div id="logic-tab-content-business-system-mapping" class="reporting-logic-tab-panel" style="display: none;">
+                                    <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+                                        <div id="publicConfigDetailContent" style="display: flex; flex-direction: column; gap: 16px;">
+                                            <div class="mapping-empty-state mapping-empty-state--center" style="min-height: 320px;">
+                                                <span class="mapping-empty-state__badge">公共配置</span>
+                                                <div class="mapping-empty-state__title">请先从左侧选择配置项</div>
+                                                <div class="mapping-empty-state__desc">已接线的公共配置保存后会直接影响导出，预留项暂不生效。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- 文件管理页面 -->
+        <div class="page" id="page-report">
+            <div class="page-report-header">
+                <div class="page-report-hero">
+                    <div class="top-nav top-nav--file">
+                        <div class="top-nav__content top-nav__content--file-management">
+                            <div class="page-report-kicker">File Workspace</div>
+                            <div class="file-management-heading-row">
+                                <h1>工程文件管理</h1>
+                            </div>
+                            <p class="page-report-subtitle">统一管理模板、数据库、合并结果与填报导出文件，保持当前数据源与归档文件一目了然。</p>
+                        </div>
+                    </div>
+                    <div class="page-report-tabs file-management-tabs">
+                        <div class="page-report-tabs__nav file-management-tabs__nav">
+                            <button id="fileCategory-templates" class="tab-button category-tab active" onclick="switchFileCategory('templates', this)">
+                                <span class="category-tab__title">模板文件</span>
+                            </button>
+                            <button id="fileCategory-databases" class="tab-button category-tab" onclick="switchFileCategory('databases', this)">
+                                <span class="category-tab__title">数据库文件</span>
+                            </button>
+                            <button id="fileCategory-data_process" class="tab-button category-tab" onclick="switchFileCategory('data_process', this)">
+                                <span class="category-tab__title">数据处理文件</span>
+                            </button>
+                            <button id="fileCategory-exports" class="tab-button category-tab" onclick="switchFileCategory('exports', this)">
+                                <span class="category-tab__title">填报数据文件</span>
+                            </button>
+                        </div>
+                        <div id="fileManagementActionButton" class="file-management-action-slot">
+                            <!-- 动态按钮区域，根据不同分类显示不同按钮 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab内容 -->
+            <div class="table-container page-report-body">
+                <!-- 工程文件Tab -->
+                <div id="tab-files" class="file-tab-content active">
+                    <div class="file-management-main file-management-main--full">
+                        <div class="file-management-content-card">
+                            <div class="file-management-content-card__head">
+                                <div class="file-management-content-card__copy">
+                                    <div class="file-management-content-card__eyebrow">当前类别</div>
+                                    <h2 id="fileManagementCurrentCategoryTitle">模板文件</h2>
+                                    <p id="fileManagementCurrentCategoryDescription">上传和管理填报模板、工程模板及其版本。</p>
+                                </div>
+                                <div id="fileManagementOverviewInlineAction" class="file-management-content-card__actions"></div>
+                            </div>
+                            <div id="filesContainer" class="file-management-content">
+                                <!-- 文件卡片将通过JavaScript动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 系统日志页面 -->
+        <div class="page" id="page-settings">
+            <div class="logs-page">
+                <div class="logs-hero">
+                    <div class="logs-hero__content">
+                        <div class="logs-hero__intro">
+                            <div class="logs-hero__eyebrow">Audit Trail</div>
+                            <h1>系统日志</h1>
+                            <p>按操作类型、页面和时间窗口快速回溯系统动作，便于排查导入导出、数据切换和配置变更。</p>
+                        </div>
+                        <div class="logs-hero__stats" id="logStatsBar">
+                            <div class="logs-stat-card">
+                                <div class="logs-stat-card__label">总操作</div>
+                                <div class="logs-stat-card__value" id="logTotalCount">0</div>
+                            </div>
+                            <div class="logs-stat-card">
+                                <div class="logs-stat-card__label">今日操作</div>
+                                <div class="logs-stat-card__value" id="logTodayCount">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-toolbar-card">
+                    <div class="logs-section-heading">
+                        <div class="logs-section-heading__eyebrow">Filters</div>
+                        <h2>筛选条件</h2>
+                        <p>按操作类型、页面和日期快速缩小排查范围。</p>
+                    </div>
+                    <div class="toolbar logs-toolbar">
+                        <div class="toolbar-left">
+                            <select id="logTypeFilter" class="logs-filter-input" onchange="filterLogs()">
+                                <option value="">全部操作类型</option>
+                                <option value="data_import">数据导入</option>
+                                <option value="data_export">数据导出</option>
+                                <option value="data_delete">数据删除</option>
+                                <option value="data_process">数据处理</option>
+                                <option value="data_switch">数据切换</option>
+                                <option value="file_upload">文件上传</option>
+                                <option value="file_delete">文件删除</option>
+                                <option value="settings_update">配置更新</option>
+                            </select>
+                            <select id="logPageFilter" class="logs-filter-input" onchange="filterLogs()">
+                                <option value="">全部页面</option>
+                                <option value="device">数据概览</option>
+                                <option value="merge">合并结果上报</option>
+                                <option value="database">合并结果</option>
+                                <option value="reporting">填报数据</option>
+                                <option value="report">报表管理</option>
+                                <option value="dataProcess">数据处理</option>
+                                <option value="file_manage">文件管理</option>
+                                <option value="settings">系统日志</option>
+                            </select>
+                            <input type="date" id="logStartDate" class="logs-filter-input" onchange="filterLogs()">
+                            <span class="logs-date-range-label">至</span>
+                            <input type="date" id="logEndDate" class="logs-filter-input" onchange="filterLogs()">
+                            <button class="btn btn-sm logs-action logs-action--ghost" onclick="clearLogFilters()">清除筛选</button>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-sm logs-action logs-action--primary" onclick="loadLogs()">刷新日志</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logs-table-card">
+                    <div class="logs-section-heading logs-section-heading--compact">
+                        <div class="logs-section-heading__eyebrow">Activity Feed</div>
+                        <h2>日志明细</h2>
+                        <p>展示当前筛选条件下的操作记录。</p>
+                    </div>
+                    <div class="table-container logs-table-shell">
+                        <table id="logsTable">
+                            <thead>
+                                <tr>
+                                    <th class="logs-col-time">操作时间</th>
+                                    <th class="logs-col-type">操作类型</th>
+                                    <th class="logs-col-page">页面</th>
+                                    <th>操作描述</th>
+                                    <th class="logs-col-file">文件名</th>
+                                    <th class="logs-col-count">记录数</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsBody">
+                                <tr><td colspan="6" class="logs-empty-cell">加载中...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination logs-pagination">
+                        <div id="logPaginationInfo" class="logs-pagination__info"></div>
+                        <div class="logs-pagination__actions">
+                            <button id="logPrevBtn">上一页</button>
+                            <button id="logNextBtn">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据处理页面 -->
+        <div class="page" id="page-dataProcess">
+            <div class="data-process-page">
+                <div class="data-process-hero">
+                    <div class="data-process-hero__content">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                            <div style="flex: 1 1 560px; min-width: 0;">
+                                <div class="data-process-hero__eyebrow">Process Studio</div>
+                                <h1>数据处理</h1>
+                                <p>把一键清洗、拆分、CSV 转换和去重统一放在同一工作台中，减少来回切换，方便查看实时处理状态与结果。</p>
+                            </div>
+                            <div id="dataProcessHelpEntry" style="display: flex; justify-content: flex-end; align-items: flex-start; flex: 0 0 auto; margin-left: auto;">
+                                <button class="btn" type="button" onclick="showDataProcessHelp()" style="padding: 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: none; white-space: nowrap;">
+                                    使用参考
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="data-process-mode-nav">
+                        <button id="dataProcessCategory-allinone" class="data-process-category-tab active" onclick="DataProcessPage.switchMode('allinone')">一键处理</button>
+                        <button id="dataProcessCategory-split" class="data-process-category-tab" onclick="DataProcessPage.switchMode('split')">数据拆分</button>
+                        <button id="dataProcessCategory-csv" class="data-process-category-tab" onclick="DataProcessPage.switchMode('csv')">CSV 转换</button>
+                        <button id="dataProcessCategory-dedup" class="data-process-category-tab" onclick="DataProcessPage.switchMode('dedup')">数据去重</button>
+                    </div>
+                </div>
+
+                <div class="data-process-right-area">
+                    <div class="data-process-mode-content active" id="allinone-mode">
+                        <div class="content-wrapper">
+                            <div class="data-process-mode-shell">
+                                <div class="data-process-mode-header">
+                                    <div>
+                                        <div class="data-process-mode-header__eyebrow">All In One</div>
+                                        <h2>一键处理</h2>
+                                        <p>批量扫描压缩包目录，清洗 Excel 并自动输出合并结果表，适合完整流程的一次性执行。</p>
+                                    </div>
+                                </div>
+                                <div class="data-process-workbench">
+                                    <div class="data-process-status-column">
+                                        <div class="settings-section settings-section--status">
+                                            <div class="settings-section-title">实时进度</div>
+                                            <div id="allinoneRealTimeStatus" class="data-process-status-box">
+                                                <div class="data-process-status-placeholder">等待开始处理...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-main-column">
+                                        <div class="settings-section">
+                                            <div class="settings-section-title">目录与输出参数</div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输入压缩包所在目录的完整路径</label>
+                                                    <div class="data-process-inline-field">
+                                                        <input type="text" id="allinoneDirPath" class="settings-input settings-input--flex" placeholder="" />
+                                                        <button class="btn data-process-inline-btn" onclick="DataProcessPage.clearDirPath()">清空</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="settings-row settings-row--compact">
+                                                <div class="settings-item settings-item--stack">
+                                                    <label class="settings-label">目标列索引</label>
+                                                    <div class="data-process-number-field">
+                                                        <input type="number" id="allinoneTargetColumn" value="7" min="0" max="50" class="settings-input">
+                                                        <span class="settings-unit">H 列 = 7</span>
+                                                    </div>
+                                                </div>
+                                                <div class="settings-item settings-item--stack">
+                                                    <label class="settings-label">输出文件名</label>
+                                                    <div class="data-process-number-field">
+                                                        <input type="text" id="allinoneOutputName" value="合并结果表" class="settings-input settings-input--wide">
+                                                        <span class="settings-unit">.xlsx</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-process-action-row">
+                                            <button class="btn btn-secondary btn-lg" onclick="DataProcessPage.previewFileList()">预览文件列表</button>
+                                            <button class="btn btn-primary btn-lg" onclick="DataProcessPage.processAllInOne()" id="allinoneStartBtn">开始一键处理</button>
+                                            <button class="btn btn-info btn-lg" onclick="DataProcessPage.exportLog(this)" id="exportLogBtn" disabled>导出日志</button>
+                                        </div>
+                                        <div class="progress-container" id="allinoneProgressContainer" style="display:none;">
+                                            <div class="progress-bar"><div class="progress-fill" id="allinoneProgressBar" style="width:0%"></div></div>
+                                            <div class="progress-text" id="allinoneProgressText">准备中...</div>
+                                            <div class="progress-detail" id="allinoneProgressDetail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-section data-process-table-section" id="selectedFilesSection" style="display:none;">
+                                    <div class="settings-section-title">文件列表</div>
+                                    <div class="data-process-table-shell">
+                                        <table class="file-list-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:50px;">#</th>
+                                                    <th>文件名</th>
+                                                    <th style="width:100px; text-align:right;">大小</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="selectedFilesList"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="result-container" id="allinoneResult" style="display:none;">
+                                    <div class="result-header">处理结果</div>
+                                    <div class="result-content" id="allinoneResultContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-process-mode-content" id="split-mode">
+                        <div class="content-wrapper">
+                            <div class="data-process-mode-shell">
+                                <div class="data-process-mode-header">
+                                    <div>
+                                        <div class="data-process-mode-header__eyebrow">Split</div>
+                                        <h2>数据拆分</h2>
+                                        <p>按设定数量拆分 Excel 文件，并保留标题行配置，适合批量下发或拆账类场景。</p>
+                                    </div>
+                                </div>
+                                <div class="data-process-workbench">
+                                    <div class="data-process-status-column">
+                                        <div class="settings-section settings-section--status">
+                                            <div class="settings-section-title">实时进度</div>
+                                            <div id="splitRealTimeStatus" class="data-process-status-box">
+                                                <div class="data-process-status-placeholder">等待开始处理...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-main-column">
+                                        <div class="settings-section">
+                                            <div class="settings-section-title">拆分参数</div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输入 Excel 文件所在目录的完整路径</label>
+                                                    <div class="data-process-inline-field">
+                                                        <input type="text" id="splitDirPath" class="settings-input settings-input--flex" placeholder="" />
+                                                        <button class="btn data-process-inline-btn" onclick="DataProcessPage.clearSplitDirPath()">清空</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="settings-row settings-row--compact">
+                                                <div class="settings-item settings-item--stack">
+                                                    <label class="settings-label">拆分数量</label>
+                                                    <input type="number" id="splitCount" value="2" min="2" max="999" class="settings-input">
+                                                </div>
+                                                <div class="settings-item settings-item--stack">
+                                                    <label class="settings-label">标题行</label>
+                                                    <input type="number" id="splitHeaderRow" value="1" min="1" max="10" class="settings-input">
+                                                </div>
+                                            </div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输出文件名前缀（可选）</label>
+                                                    <input type="text" id="splitOutputName" class="settings-input settings-input--full" placeholder="留空则使用原文件名">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-process-action-row">
+                                            <button class="btn btn-secondary btn-lg" onclick="DataProcessPage.previewSplitFileList()">预览文件列表</button>
+                                            <button class="btn btn-primary btn-lg" onclick="DataProcessPage.processSplit()" id="splitStartBtn">开始拆分</button>
+                                            <button class="btn btn-info btn-lg" onclick="DataProcessPage.exportLog(this)">导出日志</button>
+                                        </div>
+                                        <div class="progress-container" id="splitProgressContainer" style="display:none;">
+                                            <div class="progress-bar"><div class="progress-fill" id="splitProgressBar" style="width:0%"></div></div>
+                                            <div class="progress-text" id="splitProgressText">准备中...</div>
+                                            <div class="progress-detail" id="splitProgressDetail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-section data-process-table-section" id="splitSelectedFilesSection" style="display:none;">
+                                    <div class="data-process-picker-header">
+                                        <div>
+                                            <div class="settings-section-title">待处理文件</div>
+                                            <div class="data-process-picker-summary" id="splitSelectedFilesSummary">已选 0 / 0 个文件</div>
+                                            <div class="data-process-picker-size" id="splitSelectedFilesSize">大小 0.00 MB / 0.00 MB</div>
+                                        </div>
+                                        <div class="data-process-picker-actions">
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.selectAllExcelFiles('split')">全选</button>
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.clearExcelFileSelection('split')">全不选</button>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-table-shell">
+                                        <table class="file-list-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:64px; text-align:center;">选择</th>
+                                                    <th style="width:50px;">#</th>
+                                                    <th>相对路径</th>
+                                                    <th style="width:100px; text-align:right;">大小</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="splitSelectedFilesList"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="result-container" id="splitResult" style="display:none;">
+                                    <div class="result-header">拆分结果</div>
+                                    <div class="result-content" id="splitResultContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-process-mode-content" id="csv-mode">
+                        <div class="content-wrapper">
+                            <div class="data-process-mode-shell">
+                                <div class="data-process-mode-header">
+                                    <div>
+                                        <div class="data-process-mode-header__eyebrow">CSV Convert</div>
+                                        <h2>CSV 转换</h2>
+                                        <p>将指定目录中的 Excel 文件批量转换为 CSV，便于导入数据库或交给其他系统继续处理。</p>
+                                    </div>
+                                </div>
+                                <div class="data-process-workbench">
+                                    <div class="data-process-status-column">
+                                        <div class="settings-section settings-section--status">
+                                            <div class="settings-section-title">实时进度</div>
+                                            <div id="csvRealTimeStatus" class="data-process-status-box">
+                                                <div class="data-process-status-placeholder">等待开始处理...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-main-column">
+                                        <div class="settings-section">
+                                            <div class="settings-section-title">转换参数</div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输入 Excel 文件所在目录的完整路径</label>
+                                                    <div class="data-process-inline-field">
+                                                        <input type="text" id="csvDirPath" class="settings-input settings-input--flex" placeholder="" />
+                                                        <button class="btn data-process-inline-btn" onclick="DataProcessPage.clearCsvDirPath()">清空</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-process-action-row">
+                                            <button class="btn btn-secondary btn-lg" onclick="DataProcessPage.previewCsvFileList()">预览文件列表</button>
+                                            <button class="btn btn-primary btn-lg" onclick="DataProcessPage.processCsvConvert()" id="csvStartBtn">开始转换</button>
+                                            <button class="btn btn-info btn-lg" onclick="DataProcessPage.exportLog(this)">导出日志</button>
+                                        </div>
+                                        <div class="progress-container" id="csvProgressContainer" style="display:none;">
+                                            <div class="progress-bar"><div class="progress-fill" id="csvProgressBar" style="width:0%"></div></div>
+                                            <div class="progress-text" id="csvProgressText">准备中...</div>
+                                            <div class="progress-detail" id="csvProgressDetail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-section data-process-table-section" id="csvSelectedFilesSection" style="display:none;">
+                                    <div class="data-process-picker-header">
+                                        <div>
+                                            <div class="settings-section-title">待处理文件</div>
+                                            <div class="data-process-picker-summary" id="csvSelectedFilesSummary">已选 0 / 0 个文件</div>
+                                            <div class="data-process-picker-size" id="csvSelectedFilesSize">大小 0.00 MB / 0.00 MB</div>
+                                        </div>
+                                        <div class="data-process-picker-actions">
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.selectAllExcelFiles('csv')">全选</button>
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.clearExcelFileSelection('csv')">全不选</button>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-table-shell">
+                                        <table class="file-list-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:64px; text-align:center;">选择</th>
+                                                    <th style="width:50px;">#</th>
+                                                    <th>相对路径</th>
+                                                    <th style="width:100px; text-align:right;">大小</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="csvSelectedFilesList"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="result-container" id="csvResult" style="display:none;">
+                                    <div class="result-header">转换结果</div>
+                                    <div class="result-content" id="csvResultContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-process-mode-content" id="dedup-mode">
+                        <div class="content-wrapper">
+                            <div class="data-process-mode-shell">
+                                <div class="data-process-mode-header">
+                                    <div>
+                                        <div class="data-process-mode-header__eyebrow">Deduplicate</div>
+                                        <h2>数据去重</h2>
+                                        <p>快速扫描目录中的 Excel 文件并生成去重结果，适合做发票、清单和明细类数据的清洗预处理。</p>
+                                    </div>
+                                </div>
+                                <div class="data-process-workbench">
+                                    <div class="data-process-status-column">
+                                        <div class="settings-section settings-section--status">
+                                            <div class="settings-section-title">实时进度</div>
+                                            <div id="dedupRealTimeStatus" class="data-process-status-box">
+                                                <div class="data-process-status-placeholder">等待开始处理...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-main-column">
+                                        <div class="settings-section">
+                                            <div class="settings-section-title">去重参数</div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输入 Excel 文件所在目录的完整路径</label>
+                                                    <div class="data-process-inline-field">
+                                                        <input type="text" id="dedupDirPath" class="settings-input settings-input--flex" placeholder="" />
+                                                        <button class="btn data-process-inline-btn" onclick="DataProcessPage.clearDedupDirPath()">清空</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="settings-row">
+                                                <div class="settings-item-full">
+                                                    <label class="settings-label">输出压缩包名称（可选）</label>
+                                                    <input type="text" id="dedupOutputName" class="settings-input settings-input--full" placeholder="默认：数据去重结果">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-process-action-row">
+                                            <button class="btn btn-secondary btn-lg" onclick="DataProcessPage.previewDedupFileList()">预览文件列表</button>
+                                            <button class="btn btn-primary btn-lg" onclick="DataProcessPage.processDeduplicate()" id="dedupStartBtn">开始去重</button>
+                                            <button class="btn btn-info btn-lg" onclick="DataProcessPage.exportLog(this)">导出日志</button>
+                                        </div>
+                                        <div class="progress-container" id="dedupProgressContainer" style="display:none;">
+                                            <div class="progress-bar"><div class="progress-fill" id="dedupProgressBar" style="width:0%"></div></div>
+                                            <div class="progress-text" id="dedupProgressText">准备中...</div>
+                                            <div class="progress-detail" id="dedupProgressDetail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-section data-process-table-section" id="dedupSelectedFilesSection" style="display:none;">
+                                    <div class="data-process-picker-header">
+                                        <div>
+                                            <div class="settings-section-title">待处理文件</div>
+                                            <div class="data-process-picker-summary" id="dedupSelectedFilesSummary">已选 0 / 0 个文件</div>
+                                            <div class="data-process-picker-size" id="dedupSelectedFilesSize">大小 0.00 MB / 0.00 MB</div>
+                                        </div>
+                                        <div class="data-process-picker-actions">
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.selectAllExcelFiles('dedup')">全选</button>
+                                            <button class="btn data-process-picker-btn" type="button" onclick="DataProcessPage.clearExcelFileSelection('dedup')">全不选</button>
+                                        </div>
+                                    </div>
+                                    <div class="data-process-table-shell">
+                                        <table class="file-list-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:64px; text-align:center;">选择</th>
+                                                    <th style="width:50px;">#</th>
+                                                    <th>相对路径</th>
+                                                    <th style="width:100px; text-align:right;">大小</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dedupSelectedFilesList"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="result-container" id="dedupResult" style="display:none;">
+                                    <div class="result-header">去重结果</div>
+                                    <div class="result-content" id="dedupResultContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">编辑资产信息</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="edit-form" id="editForm"></form>
+            </div>
+            <div class="modal-footer">
+                <span id="deleteBtnArea" style="display:none;">
+                    <button id="editModalDeleteBtn" type="button" class="btn btn-danger" onclick="deleteAsset()">删除</button>
+                </span>
+                <div class="modal-footer-right">
+                    <button class="btn" onclick="closeModal()">取消</button>
+                    <button id="editModalSaveBtn" type="button" class="btn btn-primary" onclick="saveEdit()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="toast" id="toast">操作成功</div>
+
+    <!-- 一键处理说明对话框 -->
+    <div class="modal-overlay" id="allInOneHelpModal">
+        <div class="modal" style="width: 500px;">
+            <div class="modal-header">
+                <h2>一键处理 - 功能说明</h2>
+                <button class="modal-close" onclick="closeAllInOneHelp()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>适用于从数管平台导出的多个压缩包批量处理</strong></p>
+                <p>选择多个ZIP压缩包（资产导出文件），系统自动：</p>
+                <ol style="margin: 10px 0 10px 20px; color: #666;">
+                    <li>解压所有压缩包</li>
+                    <li>读取包内所有xlsx文件</li>
+                    <li>删除指定列的空行（默认H列"数据类型"）</li>
+                    <li>将所有清洗后的数据合并成一张表</li>
+                    <li>导出最终的合并结果表</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeAllInOneHelp()">知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入确认对话框 -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>导入Excel - 确认列变化</h2>
+                <button class="modal-close" onclick="closeImportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-preview" id="importPreview"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeImportModal()">取消</button>
+                <button class="btn btn-primary" onclick="confirmImport()">确认导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入进度对话框 -->
+    <div class="modal-overlay" id="progressModal" style="z-index: 2000;">
+        <div class="modal" style="width: 500px;">
+            <div class="modal-header">
+                <h2>正在导入数据</h2>
+            </div>
+            <div class="modal-body">
+                <div class="progress-info">
+                    <div id="progressMessage">正在准备导入...</div>
+                    <div class="progress-stats">
+                        <span id="progressCurrent">0</span> / <span id="progressTotal">0</span> 条
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="progressCloseBtn" onclick="closeProgressModal()" style="display:none;">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模板上传弹窗 -->
+    <div class="modal-overlay" id="templateUploadModal">
+        <div class="modal" style="width: 500px;">
+            <div class="modal-header">
+                <h2>上传模板文件</h2>
+                <button class="modal-close" onclick="closeTemplateUploadModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="templateUploadForm" onsubmit="event.preventDefault(); uploadTemplate();">
+                    <div class="form-group">
+                        <label>模板分类</label>
+                        <select id="templateCategory" class="form-control" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <option value="业支上报">业支上报</option>
+                            <option value="SMC上报">SMC上报</option>
+                            <option value="信安上报">信安上报</option>
+                            <option value="共用">共用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>选择文件</label>
+                        <input type="file" id="templateFileInput" accept=".xlsx,.xls" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                        <small style="color: #999;">支持 .xlsx 和 .xls 格式的Excel文件</small>
+                    </div>
+                </form>
+                <div id="templateUploadProgress" style="display: none; text-align: center; padding: 20px;">
+                    <div style="margin-bottom: 10px;">正在上传...</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="templateUploadProgressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeTemplateUploadModal()">取消</button>
+                <button class="btn btn-primary" onclick="uploadTemplate()">上传</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app-shell-legacy.js?v=20260422_1"></script>
+    <script src="js/services/export-service.js?v=20260423_1"></script>
+
+    <!-- 导出进度模态框 -->
+    <div id="exportProgressModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:10px; padding:30px; width:500px; max-width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <h3 style="margin:0 0 20px 0; color:#333; font-size:20px;">数据导出进度</h3>
+
+            <div style="margin-bottom:20px;">
+                <div style="font-size:14px; color:#666; margin-bottom:10px;">当前状态：<span id="exportProgressStatus" style="font-weight:bold; color:#667eea;">准备中...</span></div>
+                <div style="font-size:13px; color:#999; margin-bottom:5px; line-height:1.6; min-height:20px;" id="exportProgressMessage">请稍候...</div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+                    <span>进度</span>
+                    <span id="exportProgressPercent">0%</span>
+                </div>
+                <div style="width:100%; height:25px; background:#e9ecef; border-radius:12px; overflow:hidden;">
+                    <div id="exportProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #667eea, #764ba2); transition:width 0.3s ease; display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+                        <span id="exportProgressCount" style="color:white; font-size:12px; font-weight:600;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn btn-sm" onclick="handleExportProgressAction()" id="exportProgressCloseBtn" style="display:none;">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 填报数据导出弹窗 -->
+    <div class="export-modal" id="exportModal">
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <div class="export-modal-title">填报数据导出</div>
+                <button class="export-modal-close" onclick="closeExportModal()">✕</button>
+            </div>
+            
+            <div class="export-categories">
+                <div class="export-category-tab yeji active" onclick="switchExportCategory('yeji', this)">
+                    <div style="font-size: 24px; margin-bottom: 5px;">&#128188;</div>
+                    <div>业支上报</div>
+                </div>
+                <div class="export-category-tab smc" onclick="switchExportCategory('smc', this)">
+                    <div style="font-size: 24px; margin-bottom: 5px;">&#128737;</div>
+                    <div>SMC上报</div>
+                </div>
+                <div class="export-category-tab xinan" onclick="switchExportCategory('xinan', this)">
+                    <div style="font-size: 24px; margin-bottom: 5px;">&#128274;</div>
+                    <div>信安上报</div>
+                </div>
+            </div>
+            
+            <div class="export-files-grid" id="exportFilesGrid">
+                <!-- 文件卡片将通过JS动态生成 -->
+            </div>
+            
+            <div class="export-modal-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center;">
+                <div class="export-progress-info" id="exportProgressInfo" style="font-size: 13px; color: #666;">
+                    选择上方报表进行导出
+                </div>
+                <button class="btn" onclick="closeExportModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统一导入对话框 -->
+    <div class="modal-overlay" id="importModeModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="importModalTitle">导入数据</h3>
+            </div>
+            <div class="modal-body">
+                <!-- 文件信息区域 -->
+                <div id="importFileInfo" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; display: none;">
+                    <div style="font-size: 14px; line-height: 1.8;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">已选择文件：</div>
+                        <div id="importFileName" style="word-break: break-all; color: #333;"></div>
+                        <div id="importFileSize" style="color: #666; font-size: 13px;"></div>
+                    </div>
+                </div>
+
+                <!-- 状态/进度信息区域 -->
+                <div id="importStatusArea" style="margin-bottom: 20px; display: none;">
+                    <div id="importStatusText" style="text-align: center; color: #667eea; font-weight: 500; margin-bottom: 15px;"></div>
+
+                    <!-- 进度条 -->
+                    <div id="importProgressBarWrapper" style="display: none;">
+                        <div style="background: #e9ecef; border-radius: 10px; height: 24px; overflow: hidden; position: relative;">
+                            <div id="importProgressBar" style="background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                        </div>
+                        <div style="text-align: center; margin-top: 8px; font-size: 13px; color: #666;">
+                            <span id="importProgressText">0%</span>
+                            <span id="importProgressDetail" style="margin-left: 10px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分析结果摘要 -->
+                <div class="import-preview-summary" id="importPreviewSummary">
+                    <!-- 预览摘要将动态填充 -->
+                </div>
+            </div>
+            <!-- 操作按钮区域 -->
+            <div class="modal-footer" id="importModalActions" style="display: none; padding: 15px; border-top: 1px solid #e9ecef; justify-content: flex-end; gap: 10px;">
+                <button class="btn" id="importCancelButton" onclick="closeImportModeModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-content">
+            <div class="delete-confirm-header">
+                <div class="delete-confirm-title">
+                    <span>&#9888;</span> 删除数据确认
+                </div>
+            </div>
+
+            <div class="delete-confirm-warning">
+                <h4>警告：此操作不可恢复！</h4>
+                <p>您即将删除当前表格的所有数据以及相关的文件。此操作无法撤销，请谨慎操作。</p>
+            </div>
+
+            <div class="delete-confirm-items">
+                <div style="font-weight: 600; margin-bottom: 10px; font-size: 13px;">将删除以下内容：</div>
+                <div class="delete-confirm-item">表格中的所有数据记录</div>
+                <div class="delete-confirm-item">项目内的Excel源文件</div>
+                <div class="delete-confirm-item">相关的数据库文件（.db）</div>
+            </div>
+
+            <div class="delete-confirm-footer">
+                <button class="btn" onclick="closeDeleteConfirmModal()">取消</button>
+                <button class="btn btn-danger" onclick="executeDeleteData()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 映射管理使用参考弹窗 -->
+    <div id="mappingHelpModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width: 900px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="border-bottom: 3px solid #17a2b8;">
+                <h3 style="margin:0; font-size: 20px; color: #333;">映射管理使用参考</h3>
+                <button class="modal-close" onclick="closeMappingHelp()" style="font-size: 24px;">&#10005;</button>
+            </div>
+
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 25px;">
+                <!-- 概述 -->
+                <div style="background: #e7f5ff; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 4px; margin-bottom: 25px;">
+                    <h4 style="margin: 0 0 10px 0; color: #0056b3; font-size: 16px;">核心功能</h4>
+                    <p style="margin: 0; color: #333; line-height: 1.8;">映射管理用于定义导出时每一列如何取值。数据可以来自数据概览表、合并结果表、公共配置，或由条件判断、动态生成、多行展开等逻辑计算得到。页面中的修改只有在点击“保存配置”提交到服务器后，才视为正式生效。</p>
+                </div>
+
+                <!-- 操作方式 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">1. 当前页面如何操作</h4>
+
+                <div style="background: white; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; margin-bottom: 25px;">
+                    <ol style="margin: 0; padding-left: 20px; line-height: 2; color: #495057; font-size: 13px;">
+                        <li><strong>选择报表</strong>：先在左侧选择分类和具体报表。</li>
+                        <li><strong>查看映射</strong>：右侧会显示当前报表所有列的映射配置。</li>
+                        <li><strong>选择类型</strong>：先选操作类型，再选数据源类型。</li>
+                        <li><strong>简单类型</strong>：固定值、字段索引这类映射，可直接在表格里填写或下拉选择。</li>
+                        <li><strong>复杂类型</strong>：条件判断、跨表查询、动态生成、多行展开这类映射，需要点击右侧配置入口或弹窗完成详细设置。</li>
+                        <li><strong>保存生效</strong>：点击底部“保存配置”按钮提交到服务器，保存后才视为正式生效。</li>
+                        <li><strong>建议验证</strong>：保存后先做测试导出，再执行正式导出。</li>
+                    </ol>
+                </div>
+
+                <!-- 数据源类型 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">2. 常见数据源类型 (source_type)</h4>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #17a2b8; margin-bottom: 8px;">sequence - 序号</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">自动生成递增序号</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "sequence"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #28a745; margin-bottom: 8px;">fixed - 固定值</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">填写固定的文本或数字</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "fixed"<br>source_value: "湖北移动"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #fd7e14; margin-bottom: 8px;">field_index_merge_results</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">从合并结果表按数据库真实索引获取字段</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "field_index_merge_results"<br>source_value: "4"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #6f42c1; margin-bottom: 8px;">field_index_assets</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">从数据概览表按索引获取字段</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "field_index_assets"<br>source_value: "13"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #dc3545; margin-bottom: 8px;">conditional - 条件映射</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">根据条件判断返回不同的值</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "conditional"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #20c997; margin-bottom: 8px;">lookup_ip - IP查询</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">通过IP从数据概览表查询信息</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "lookup_ip"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #0d6efd; margin-bottom: 8px;">vlookup_assets - 跨表查询</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">使用某个字段值到数据概览表联查，再返回目标字段</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "vlookup_assets"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #6610f2; margin-bottom: 8px;">vlookup_assets_with_mapping</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">先经过公共配置映射，再到数据概览表联查</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "vlookup_assets_with_mapping"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #6f42c1; margin-bottom: 8px;">field_assets_dynamic</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">基于字段值、参考列和上下文生成动态文本</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "field_assets_dynamic"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #7950f2; margin-bottom: 8px;">field_assets_with_transform</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">先读取字段，再按规则或 transform 输出结果</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "field_assets_with_transform"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #198754; margin-bottom: 8px;">multi_strategy_config</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">把一条源记录展开成多条策略记录</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "multi_strategy_config"</code>
+                    </div>
+
+                    <div style="border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; background: #f8f9fa;">
+                        <div style="font-weight: 600; color: #20c997; margin-bottom: 8px;">strategy_content_mapping</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">根据展开后的策略类型返回对应内容</div>
+                        <code style="display: block; background: white; padding: 8px; border-radius: 4px; font-size: 11px; color: #d63384;">source_type: "strategy_content_mapping"</code>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #dbeafe; border-radius: 6px; padding: 14px 16px; margin-bottom: 25px; font-size: 13px; color: #475569; line-height: 1.8;">
+                    并不是所有报表都会同时使用上述全部类型。以当前报表字段、右侧配置入口和保存后的导出效果为准。
+                </div>
+
+                <!-- 转换规则 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">3. 转换规则 (transform)</h4>
+
+                <div style="background: white; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin-bottom: 25px;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f8f9fa;">
+                            <tr>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; font-size: 13px; color: #495057;">转换规则</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; font-size: 13px; color: #495057;">说明</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; font-size: 13px; color: #495057;">示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 12px; font-family: monospace; color: #d63384; font-size: 12px;">split_before_slash</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;">取 "/" 前的部分</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;"><code>"db_name/schema" → "db_name"</code></td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 12px; font-family: monospace; color: #d63384; font-size: 12px;">remove_ip_brackets</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;">去除 [IP] 格式</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;"><code>"表名[192.168.1.1]" → "表名"</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px; font-family: monospace; color: #6c757d; font-size: 12px;">（留空）</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;">不进行转换</td>
+                                <td style="padding: 12px; color: #495057; font-size: 12px;">原样输出</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #dbeafe; border-radius: 6px; padding: 14px 16px; margin-bottom: 25px; font-size: 13px; color: #475569; line-height: 1.8;">
+                    普通字段提取型映射可以直接配合 transform 使用；“字段+转换”“动态生成”“多行展开”等复杂类型主要通过右侧配置面板维护，不只依赖 transform 字段。
+                </div>
+
+                <!-- 字段索引说明 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">4. 字段索引说明</h4>
+
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 25px;">
+                    <div style="font-weight: 600; color: #856404; margin-bottom: 10px;">重要提示</div>
+                    <div style="color: #856404; font-size: 13px; line-height: 1.6;">
+                        <p style="margin: 0 0 10px 0;">字段索引起始于 <strong>0</strong>，而不是 1。</p>
+                        <p style="margin: 0 0 10px 0;">其中 <code>merge_results</code> 与 <code>assets</code> 均采用当前系统实际列配置口径，<code>id</code> 为索引 0。</p>
+                        <p style="margin: 0 0 10px 0;">优先使用页面当前下拉框选择字段，不建议手工猜索引。</p>
+                        <p style="margin: 0;">如果导入结构、列配置或模板发生变化，请以页面当前可选字段和实际配置为准，不要只依赖示例文字手填索引。</p>
+                    </div>
+                </div>
+
+                <!-- 使用示例 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">5. 实际使用示例</h4>
+
+                <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; color: #155724; margin-bottom: 10px;">示例1：固定值</div>
+                    <pre style="background: white; padding: 12px; border-radius: 4px; margin: 0; font-size: 11px; overflow-x: auto;">{
+  "target_column": "B",
+  "target_name": "所属部门",
+  "source_type": "fixed",
+  "source_value": "数智化部",
+  "transform": "",
+  "description": "固定值"
+}</pre>
+                </div>
+
+                <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; color: #0c5460; margin-bottom: 10px;">示例2：从合并结果表获取字段（按真实数据库索引）</div>
+                    <pre style="background: white; padding: 12px; border-radius: 4px; margin: 0; font-size: 11px; overflow-x: auto;">{
+  "target_column": "K",
+  "target_name": "数据名称",
+  "source_type": "field_index_merge_results",
+  "source_value": "8",
+  "transform": "",
+  "description": "数据类型"
+}</pre>
+                </div>
+
+                <!-- 操作指南 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">6. 使用建议</h4>
+
+                <div style="background: white; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px;">
+                    <ol style="margin: 0; padding-left: 20px; line-height: 2; color: #495057; font-size: 13px;">
+                        <li><strong>简单字段</strong>：优先用字段索引下拉选择，不要手工猜索引。</li>
+                        <li><strong>复杂规则</strong>：优先通过右侧配置入口维护，不要只改表格中的简写值。</li>
+                        <li><strong>保存后测试</strong>：建议先保存，再做测试导出确认结果。</li>
+                        <li><strong>旧配置兼容</strong>：如果看到历史命名或旧类型，以当前页面回显和右侧配置面板为准。</li>
+                    </ol>
+                </div>
+
+                <!-- 公共配置说明 -->
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">7. 公共配置说明</h4>
+
+                <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 4px; margin-bottom: 25px;">
+                    <div style="font-weight: 600; color: #0c5460; margin-bottom: 10px;">公共配置 (business_system_name_mapping)</div>
+                    <div style="color: #333; font-size: 13px; line-height: 1.6;">
+                        <p style="margin: 0 0 10px 0;">用于将<strong>合并结果表</strong>中的业务系统名称映射到<strong>数据概览表</strong>中的标准名称，确保跨表查询时能够正确匹配。</p>
+                        <div style="background: white; padding: 12px; border-radius: 4px; font-size: 12px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">映射示例：</div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="border-bottom: 1px solid #dee2e6;">
+                                    <td style="padding: 6px; color: #666;">合并结果表名称</td>
+                                    <td style="padding: 6px;">&rarr;</td>
+                                    <td style="padding: 6px; color: #28a745;">数据概览表名称</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 6px; color: #666;">湖北移动业支运营支撑系统</td>
+                                    <td style="padding: 6px;">&rarr;</td>
+                                    <td style="padding: 6px; color: #28a745;">BOSS系统</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 6px; color: #666;">OA业务支撑</td>
+                                    <td style="padding: 6px;">&rarr;</td>
+                                    <td style="padding: 6px; color: #28a745;">OA系统</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px; color: #666;">掌微厅系统</td>
+                                    <td style="padding: 6px;">&rarr;</td>
+                                    <td style="padding: 6px; color: #28a745;">掌微厅系统</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; border-left: 4px solid #6c757d; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; color: #495057; margin-bottom: 10px;">如何使用公共配置</div>
+                    <div style="color: #495057; font-size: 13px; line-height: 1.6;">
+                        <p style="margin: 0 0 8px 0;">1. 在映射管理页面点击左侧 <strong>"公共配置"</strong> 按钮</p>
+                        <p style="margin: 0 0 8px 0;">2. 选择 <strong>"business_system_name_mapping"</strong> 这一项公共配置查看或编辑映射关系</p>
+                        <p style="margin: 0;">3. 在配置中使用 <code>vlookup_assets_with_mapping</code> 数据源类型时，会自动应用此映射字典</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef;">
+                <button class="btn" onclick="closeMappingHelp()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据处理使用参考弹窗 -->
+    <div id="dataProcessHelpModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width: 920px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="border-bottom: 3px solid #0b63ce;">
+                <h3 style="margin:0; font-size: 20px; color: #333;">数据处理使用参考</h3>
+                <button class="modal-close" onclick="closeDataProcessHelp()" style="font-size: 24px;">&#10005;</button>
+            </div>
+
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 25px;">
+                <div style="background: #eff6ff; border-left: 4px solid #0b63ce; padding: 15px; border-radius: 4px; margin-bottom: 25px;">
+                    <h4 style="margin: 0 0 10px 0; color: #0b63ce; font-size: 16px;">工作台说明</h4>
+                    <p style="margin: 0; color: #334155; line-height: 1.8;">数据处理页把一键处理、数据拆分、CSV 转换和数据去重集中在同一工作台中。你可以在同一页面里切换模式、查看左侧实时状态、预览待处理文件，并在处理完成后直接下载结果或导出日志。</p>
+                </div>
+
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">1. 四种处理模式</h4>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                    <div style="border: 1px solid #dbeafe; border-radius: 8px; padding: 15px; background: #f8fbff;">
+                        <div style="font-weight: 700; color: #0b63ce; margin-bottom: 8px;">一键处理</div>
+                        <div style="font-size: 12px; color: #475569; line-height: 1.8;">输入压缩包目录，系统会批量扫描 ZIP，清洗其中的 Excel，并自动输出合并结果表。需要设置目标列索引，当前默认值是 H 列 = 7。</div>
+                    </div>
+                    <div style="border: 1px solid #dcfce7; border-radius: 8px; padding: 15px; background: #f8fff9;">
+                        <div style="font-weight: 700; color: #15803d; margin-bottom: 8px;">数据拆分</div>
+                        <div style="font-size: 12px; color: #475569; line-height: 1.8;">输入 Excel 文件目录，先预览文件列表，再按拆分数量和标题行规则输出多份文件。拆分数量至少为 2，输出文件名前缀可选。</div>
+                    </div>
+                    <div style="border: 1px solid #e9d5ff; border-radius: 8px; padding: 15px; background: #fcf8ff;">
+                        <div style="font-weight: 700; color: #7c3aed; margin-bottom: 8px;">CSV 转换</div>
+                        <div style="font-size: 12px; color: #475569; line-height: 1.8;">输入 Excel 文件目录，先预览并勾选待处理文件，再批量转换为 CSV，适合给数据库导入或其他系统继续处理。</div>
+                    </div>
+                    <div style="border: 1px solid #fde68a; border-radius: 8px; padding: 15px; background: #fffdf5;">
+                        <div style="font-weight: 700; color: #b45309; margin-bottom: 8px;">数据去重</div>
+                        <div style="font-size: 12px; color: #475569; line-height: 1.8;">输入 Excel 文件目录，先预览并勾选待处理文件，再生成去重结果压缩包。输出压缩包名称可选，留空时使用默认名称。</div>
+                    </div>
+                </div>
+
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">2. 通用操作流程</h4>
+
+                <div style="background: white; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; margin-bottom: 25px;">
+                    <ol style="margin: 0; padding-left: 20px; line-height: 2; color: #495057; font-size: 13px;">
+                        <li><strong>切换模式</strong>：先选择一键处理、数据拆分、CSV 转换或数据去重。</li>
+                        <li><strong>输入目录</strong>：按当前模式填写正确目录。一键处理使用压缩包目录，其他三种模式使用 Excel 文件目录。</li>
+                        <li><strong>预览文件</strong>：建议先点击“预览文件列表”，确认系统识别到的文件数量和大小。</li>
+                        <li><strong>选择文件</strong>：拆分、CSV、去重三种模式支持勾选文件，可用“全选/全不选”快速调整范围。</li>
+                        <li><strong>开始处理</strong>：点击主按钮发起任务，左侧实时状态区会持续展示当前进度。</li>
+                        <li><strong>查看结果</strong>：处理完成后，在结果区查看统计信息并下载输出文件。</li>
+                        <li><strong>导出日志</strong>：如需留痕或排查问题，可导出当前模式日志。</li>
+                    </ol>
+                </div>
+
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">3. 关键差异和注意事项</h4>
+
+                <div style="display: grid; gap: 12px; margin-bottom: 25px;">
+                    <div style="padding: 14px 16px; background: #fff7ed; border-left: 4px solid #f97316; border-radius: 6px; color: #7c2d12; font-size: 13px; line-height: 1.8;">一键处理使用压缩包目录，其他三种模式使用 Excel 文件目录。这是当前页面最容易填错的一项。</div>
+                    <div style="padding: 14px 16px; background: #eff6ff; border-left: 4px solid #2563eb; border-radius: 6px; color: #1e3a8a; font-size: 13px; line-height: 1.8;">修改目录输入框后，当前模式已预览的文件选择会被清空，需要重新预览并确认。</div>
+                    <div style="padding: 14px 16px; background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 6px; color: #166534; font-size: 13px; line-height: 1.8;">数据拆分要求“拆分数量至少为 2”，标题行按原文件头部保留；CSV 转换和数据去重不需要设置标题行。</div>
+                    <div style="padding: 14px 16px; background: #faf5ff; border-left: 4px solid #9333ea; border-radius: 6px; color: #6b21a8; font-size: 13px; line-height: 1.8;">目录路径会保存在本地浏览器缓存中，点击对应“清空”按钮会清除当前输入，并清空这一模式下的已预览选择状态。</div>
+                </div>
+
+                <h4 style="color: #333; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;">4. 结果与日志说明</h4>
+
+                <div style="background: #f8fafc; border: 1px solid #dbeafe; border-radius: 6px; padding: 16px; color: #475569; font-size: 13px; line-height: 1.9;">处理完成后，可在结果区直接查看成功状态、文件数量、行数或去重统计，并下载对应结果文件。日志导出按当前处理模式生成，适合保留过程记录、回溯失败原因或给后端排查问题时使用。</div>
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef;">
+                <button class="btn" onclick="closeDataProcessHelp()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 条件规则编辑器模态框 -->
+    <div class="modal-overlay" id="logicRuleEditorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[编辑]</span>
+                    <span id="logicRuleEditorTitle">新建逻辑模块</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">配置可复用的复杂逻辑模块</div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="logicRuleEditorBody">
+                <!-- 编辑器内容将由JavaScript动态生成 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeLogicRuleEditor()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn" onclick="testLogicRule()" style="padding: 8px 20px; background: #ffc107; color: #212529; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">测试规则</button>
+                <button class="btn btn-primary" onclick="saveLogicRule()" style="padding: 8px 20px; background: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存规则</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 单字段条件配置模态框 -->
+    <div class="modal-overlay" id="singleConditionalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #005fe0 0%, #0047b3 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[配置]</span>
+                    <span>单字段条件配置</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">根据一个字段的值进行条件判断，支持正则表达式和预设模板</div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="singleConditionalModalBody">
+                <!-- 配置内容将动态填充到这里 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeSingleConditionalModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveSingleConditionalConfig()" style="padding: 8px 20px; background: #005fe0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 业务系统映射字典编辑模态框 -->
+    <div class="modal-overlay" id="businessSystemMappingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 900px; max-height: 90vh; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #28a745 0%, #218838 100%); color: white; border-radius: 8px 8px 0 0; flex-shrink: 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[编辑]</span>
+                    <span>公共配置</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">将合并结果表的业务系统名称映射到数据概览表中的标准名称</div>
+            </div>
+
+            <div class="modal-body" style="padding: 0; flex: 1; overflow-y: auto;">
+                <!-- 说明区域 -->
+                <div style="padding: 20px 25px 15px; background: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 8px 0; color: #333; font-size: 14px;">使用说明</h4>
+                            <p style="margin: 0; font-size: 12px; color: #6c757d; line-height: 1.5;">
+                                此映射字典用于解决合并结果表与数据概览表中业务系统名称不一致的问题。<br>
+                                例如：合并结果表中的"安全系统"映射到数据概览表中的"数据安全管控平台"
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="addBusinessSystemMapping()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;">+ 添加映射</button>
+                            <button onclick="loadAssetsBusinessSystems()" style="padding: 8px 16px; background: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">从数据概览表加载</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 映射表格 -->
+                <div style="padding: 0;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead style="background: #f8f9fa; position: sticky; top: 0; z-index: 1;">
+                            <tr>
+                                <th style="padding: 12px 15px; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057; width: 40%;">合并结果表名称</th>
+                                <th style="padding: 12px 15px; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057; width: 40%;">数据概览表名称（标准名称）</th>
+                                <th style="padding: 12px 15px; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057; width: 20%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="businessSystemMappingTableBody">
+                            <!-- 映射条目将由JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px; flex-shrink: 0;">
+                <button class="btn" onclick="closeBusinessSystemMappingModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveBusinessSystemMappingDraft()" style="padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存映射</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 业务系统名称选择下拉框 -->
+    <div id="businessSystemsDropdown" style="display: none; position: absolute; background: white; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); max-height: 200px; overflow-y: auto; z-index: 10001; padding: 5px 0;">
+        <!-- 选项将由JavaScript动态生成 -->
+    </div>
+
+    <!-- 多字段条件配置模态框 -->
+    <div class="modal-overlay" id="multiConditionalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #005fe0 0%, #0047b3 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[配置]</span>
+                    <span>多字段条件配置</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">根据多个字段的值，按AND/OR逻辑返回不同的结果</div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="multiConditionalModalBody">
+                <!-- 配置内容将动态填充到这里 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeMultiConditionalModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveMultiConditionalConfig()" style="padding: 8px 20px; background: #005fe0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VLOOKUP配置Modal -->
+    <div class="modal-overlay" id="vlookupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #005fe0 0%, #0047b3 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[配置]</span>
+                    <span>VLOOKUP跨表查询</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">通过某个字段的值在数据概览表中查找并返回另一字段的值</div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="vlookupModalBody">
+                <!-- 配置内容将动态填充到这里 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeVlookupModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveVlookupConfig()" style="padding: 8px 20px; background: #005fe0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- IP查询配置Modal -->
+    <div class="modal-overlay" id="ipLookupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #005fe0 0%, #0047b3 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[配置]</span>
+                    <span>IP查询</span>
+                </h3>
+                <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">通过IP从数据概览表中反查关联资产字段</div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="ipLookupModalBody">
+                <!-- 配置内容将动态填充到这里 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeIpLookupModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveIpLookupConfig()" style="padding: 8px 20px; background: #005fe0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用高级配置Modal -->
+    <div class="modal-overlay" id="advancedConfigModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 8px; width: 90%; max-width: 760px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="padding: 20px 25px; background: linear-gradient(135deg, #005fe0 0%, #0047b3 100%); color: white; border-radius: 8px 8px 0 0;">
+                <h3 id="advancedConfigModalTitle" style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                    <span>[配置]</span>
+                    <span>高级配置</span>
+                </h3>
+                <div id="advancedConfigModalSubtitle" style="font-size: 12px; margin-top: 5px; opacity: 0.9;"></div>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;" id="advancedConfigModalBody">
+                <!-- 配置内容将动态填充到这里 -->
+            </div>
+
+            <div class="modal-footer" style="padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e9ecef; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 8px 8px;">
+                <button class="btn" onclick="closeAdvancedConfigModal()" style="padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">取消</button>
+                <button class="btn btn-primary" onclick="saveAdvancedConfigModal()" style="padding: 8px 20px; background: #005fe0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">保存配置</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reportSettingsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;"></div>
+
+    <div class="app-copyright"></div>
+</body>
+</html>
